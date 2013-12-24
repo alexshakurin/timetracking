@@ -1,0 +1,26 @@
+﻿<Window x:Class="TimeTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="100" Width="300" DataContext="{Binding Main, Source={StaticResource locator}}">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo Description="Start/Stop">
+            <TaskbarItemInfo.ThumbButtonInfos>
+                <ThumbButtonInfoCollection>
+                    <ThumbButtonInfo Command="{Binding StartStopCommand}"
+                                     Description="Start/Stop"></ThumbButtonInfo>
+                </ThumbButtonInfoCollection>
+            </TaskbarItemInfo.ThumbButtonInfos>
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.7*" />
+            <ColumnDefinition Width="0.3*" />
+        </Grid.ColumnDefinitions>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                   DataContext="{Binding TimeTrackingViewModel}"
+                   Text="{Binding TotalTime}"
+                   FontSize="22" />
+        <Button Grid.Column="1" Content="{Binding ActionHeader}" Command="{Binding StartStopCommand}" />
+    </Grid>
+</Window>
