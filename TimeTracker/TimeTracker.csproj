@@ -46,16 +46,15 @@
     <Reference Include="GalaSoft.MvvmLight.Extras">
       <HintPath>..\packages\MvvmLightLibs.4.1.27.0\lib\net35\GalaSoft.MvvmLight.Extras.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Unity.3.0.1304.0\lib\Net45\Microsoft.Practices.Unity.dll</HintPath>
+      <HintPath>..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Unity.3.0.1304.0\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Unity.Configuration">
+      <HintPath>..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -92,6 +91,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="FileSystemExport\FileSystemTimeService.cs" />
+    <Compile Include="RestApiExport\RestApiTimeService.cs" />
     <Compile Include="TimeTrackingViewModel.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="ViewModelLocator.cs" />
@@ -134,15 +134,33 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Scripts\jquery-2.1.0.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Stopwatch.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TimeTracking.EventHandlers\TimeTracking.EventHandlers.csproj">
+      <Project>{03b2debd-2994-499f-bca5-c1e49eff9c2a}</Project>
+      <Name>TimeTracking.EventHandlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTracking.Events\TimeTracking.Events.csproj">
+      <Project>{406f5fb7-33a1-42c5-b111-218fbae6e0bd}</Project>
+      <Name>TimeTracking.Events</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TimeTracking.Export\TimeTracking.Export.csproj">
       <Project>{55f58786-abf6-4a8e-94c0-32a3c00ff114}</Project>
       <Name>TimeTracking.Export</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TimeTracking.Infrastructure\TimeTracking.Infrastructure.csproj">
+      <Project>{91fc79e7-0a4f-42e1-94ec-1474a81efdc4}</Project>
+      <Name>TimeTracking.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-2.1.0.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.0.js" />
+    <Content Include="Scripts\jquery-2.1.0.min.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

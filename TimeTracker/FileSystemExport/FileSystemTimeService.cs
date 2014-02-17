@@ -6,28 +6,36 @@ namespace TimeTracker.FileSystemExport
 {
 	public class FileSystemTimeService : ITimeService
 	{
+		private static readonly object syncRoot = new object();
+
 		public void SaveTime(TimeSpan currentTime, DateTime date)
 		{
-			var fileName = date.ToString("yyyy_MM_dd") + ".txt";
-			File.WriteAllText(fileName, currentTime.ToString());
+			lock (syncRoot)
+			{
+				var fileName = date.ToString("yyyyMMdd") + ".txt";
+				File.WriteAllText(fileName, currentTime.ToString());
+			}
 		}
 
 		public TimeSpan? LoadTime(DateTime date)
 		{
-			var fileName = date.ToString("yyyy_MM_dd") + ".txt";
-			TimeSpan? result = null;
-
-			if (File.Exists(fileName))
+			lock (syncRoot)
 			{
-				TimeSpan span;
-				var text = File.ReadAllText(fileName);
-				if (TimeSpan.TryParse(text, out span))
-				{
-					result = new TimeSpan(span.Hours, span.Minutes, span.Seconds);
-				}
-			}
+				var fileName = date.ToString("yyyyMMdd") + ".txt";
+				TimeSpan? result = null;
 
-			return result;
+				if (File.Exists(fileName))
+				{
+					TimeSpan span;
+					var text = File.ReadAllText(fileName);
+					if (TimeSpan.TryParse(text, out span))
+					{
+						result = new TimeSpan(span.Hours, span.Minutes, span.Seconds);
+					}
+				}
+
+				return result;
+			}
 		}
 	}
 }

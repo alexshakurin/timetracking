@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{55F58786-ABF6-4A8E-94C0-32A3C00FF114}</ProjectGuid>
+    <ProjectGuid>{91FC79E7-0A4F-42E1-94EC-1474A81EFDC4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TimeTracking.Export</RootNamespace>
-    <AssemblyName>TimeTracking.Export</AssemblyName>
+    <RootNamespace>TimeTracking.Infrastructure</RootNamespace>
+    <AssemblyName>TimeTracking.Infrastructure</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,9 +43,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ILocalTimeStorage.cs" />
-    <Compile Include="ITimeService.cs" />
+    <Compile Include="IEventBus.cs" />
+    <Compile Include="Impl\EventBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TimeTracking.EventHandlers\TimeTracking.EventHandlers.csproj">
+      <Project>{03b2debd-2994-499f-bca5-c1e49eff9c2a}</Project>
+      <Name>TimeTracking.EventHandlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTracking.Events\TimeTracking.Events.csproj">
+      <Project>{406f5fb7-33a1-42c5-b111-218fbae6e0bd}</Project>
+      <Name>TimeTracking.Events</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
