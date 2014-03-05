@@ -1,0 +1,17 @@
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\storage\timetracking.s3db
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\x64\SQLite.Interop.dll
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\x86\SQLite.Interop.dll
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\TimeTracking.LocalStorage.dll.config
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\TimeTracking.LocalStorage.dll
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\TimeTracking.LocalStorage.pdb
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\EntityFramework.dll
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\EntityFramework.SqlServer.dll
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\System.Data.SQLite.dll
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\System.Data.SQLite.EF6.dll
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\System.Data.SQLite.Linq.dll
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\EntityFramework.xml
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\EntityFramework.SqlServer.xml
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\bin\Debug\System.Data.SQLite.xml
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\obj\Debug\TimeTracking.LocalStorage.csprojResolveAssemblyReference.cache
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\obj\Debug\TimeTracking.LocalStorage.dll
+F:\Projects\TimeTracking\TimeTracking.LocalStorage\obj\Debug\TimeTracking.LocalStorage.pdb

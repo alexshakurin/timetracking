@@ -1,0 +1,9 @@
+F:\Projects\TimeTracking\TimeTracking.EventHandlers\bin\Debug\TimeTracking.EventHandlers.dll
+F:\Projects\TimeTracking\TimeTracking.EventHandlers\bin\Debug\TimeTracking.EventHandlers.pdb
+F:\Projects\TimeTracking\TimeTracking.EventHandlers\bin\Debug\TimeTracking.Events.dll
+F:\Projects\TimeTracking\TimeTracking.EventHandlers\bin\Debug\TimeTracking.Export.dll
+F:\Projects\TimeTracking\TimeTracking.EventHandlers\bin\Debug\TimeTracking.Events.pdb
+F:\Projects\TimeTracking\TimeTracking.EventHandlers\bin\Debug\TimeTracking.Export.pdb
+F:\Projects\TimeTracking\TimeTracking.EventHandlers\obj\Debug\TimeTracking.EventHandlers.csprojResolveAssemblyReference.cache
+F:\Projects\TimeTracking\TimeTracking.EventHandlers\obj\Debug\TimeTracking.EventHandlers.dll
+F:\Projects\TimeTracking\TimeTracking.EventHandlers\obj\Debug\TimeTracking.EventHandlers.pdb

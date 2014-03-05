@@ -1,0 +1,5 @@
+F:\Projects\TimeTracking\TimeTracking.Export\bin\Debug\TimeTracking.Export.dll
+F:\Projects\TimeTracking\TimeTracking.Export\bin\Debug\TimeTracking.Export.pdb
+F:\Projects\TimeTracking\TimeTracking.Export\obj\Debug\TimeTracking.Export.csprojResolveAssemblyReference.cache
+F:\Projects\TimeTracking\TimeTracking.Export\obj\Debug\TimeTracking.Export.dll
+F:\Projects\TimeTracking\TimeTracking.Export\obj\Debug\TimeTracking.Export.pdb

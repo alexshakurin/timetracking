@@ -1,0 +1,12 @@
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\bin\Debug\TimeTracking.Infrastructure.dll
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\bin\Debug\TimeTracking.Infrastructure.pdb
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\bin\Debug\TimeTracking.EventHandlers.dll
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\bin\Debug\TimeTracking.Events.dll
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\bin\Debug\TimeTracking.EventHandlers.pdb
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\bin\Debug\TimeTracking.Events.pdb
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\bin\Debug\Microsoft.Practices.ServiceLocation.xml
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\obj\Debug\TimeTracking.Infrastructure.csprojResolveAssemblyReference.cache
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\obj\Debug\TimeTracking.Infrastructure.dll
+F:\Projects\TimeTracking\TimeTracking.Infrastructure\obj\Debug\TimeTracking.Infrastructure.pdb

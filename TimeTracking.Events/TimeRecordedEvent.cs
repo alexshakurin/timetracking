@@ -8,10 +8,18 @@ namespace TimeTracking.Events
 
 		public int Minutes { get; private set; }
 
-		public TimeRecordedEvent(DateTime date, int minutes)
+		public string Memo { get; private set; }
+
+		public TimeRecordedEvent(DateTime date, int minutes, string memo)
 		{
+			if (minutes == 0)
+			{
+				throw new ArgumentException("Minutes cannot be zero", "minutes");
+			}
+
 			Date = date.Date;
 			Minutes = minutes;
+			Memo = memo;
 		}
 	}
 }
