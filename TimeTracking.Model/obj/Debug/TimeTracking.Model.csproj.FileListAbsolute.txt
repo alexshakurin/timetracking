@@ -1,5 +1,0 @@
-F:\Projects\TimeTracking\TimeTracking.Model\bin\Debug\TimeTracking.Model.dll
-F:\Projects\TimeTracking\TimeTracking.Model\bin\Debug\TimeTracking.Model.pdb
-F:\Projects\TimeTracking\TimeTracking.Model\obj\Debug\TimeTracking.Model.csprojResolveAssemblyReference.cache
-F:\Projects\TimeTracking\TimeTracking.Model\obj\Debug\TimeTracking.Model.dll
-F:\Projects\TimeTracking\TimeTracking.Model\obj\Debug\TimeTracking.Model.pdb

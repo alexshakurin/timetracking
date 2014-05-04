@@ -1,5 +1,0 @@
-F:\Projects\TimeTracking\TimeTracking.Events\bin\Debug\TimeTracking.Events.dll
-F:\Projects\TimeTracking\TimeTracking.Events\bin\Debug\TimeTracking.Events.pdb
-F:\Projects\TimeTracking\TimeTracking.Events\obj\Debug\TimeTracking.Events.csprojResolveAssemblyReference.cache
-F:\Projects\TimeTracking\TimeTracking.Events\obj\Debug\TimeTracking.Events.dll
-F:\Projects\TimeTracking\TimeTracking.Events\obj\Debug\TimeTracking.Events.pdb
