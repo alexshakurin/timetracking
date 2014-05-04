@@ -6,6 +6,6 @@ namespace TimeTracking.Model
 	{
 		public Guid SourceId { get; internal set; }
 
-		public int Version { get; internal set; }
+		public long Version { get; internal set; }
 	}
 }

@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TimeTracking.Infrastructure</RootNamespace>
     <AssemblyName>TimeTracking.Infrastructure</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,11 +31,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,11 +55,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICommandBus.cs" />
+    <Compile Include="CommandHandlers\ICommandHandler.cs" />
     <Compile Include="IEventBus.cs" />
+    <Compile Include="IEventSourcedRepository.cs" />
     <Compile Include="Impl\EventBus.cs" />
+    <Compile Include="Impl\SqlEventSourcedRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Impl\SynchronousCommandBus.cs" />
+    <Compile Include="Serialization\ITextSerializer.cs" />
+    <Compile Include="Serialization\JsonTextSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TimeTracking.Commands\TimeTracking.Commands.csproj">
+      <Project>{7db4e368-0a3b-4206-b95a-3ac4fa274e03}</Project>
+      <Name>TimeTracking.Commands</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TimeTracking.EventHandlers\TimeTracking.EventHandlers.csproj">
       <Project>{03b2debd-2994-499f-bca5-c1e49eff9c2a}</Project>
       <Name>TimeTracking.EventHandlers</Name>
@@ -56,10 +79,20 @@
       <Project>{406f5fb7-33a1-42c5-b111-218fbae6e0bd}</Project>
       <Name>TimeTracking.Events</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TimeTracking.LocalStorage\TimeTracking.LocalStorage.csproj">
+      <Project>{012b1cbb-b499-480d-8c3c-15ee43743f2a}</Project>
+      <Name>TimeTracking.LocalStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTracking.Model\TimeTracking.Model.csproj">
+      <Project>{1bd06df3-22a6-4f01-83eb-d468ac039c76}</Project>
+      <Name>TimeTracking.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

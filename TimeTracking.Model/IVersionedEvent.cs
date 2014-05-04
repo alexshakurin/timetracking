@@ -2,6 +2,6 @@
 {
 	public interface IVersionedEvent : IDomainEvent
 	{
-		int Version { get; }
+		long Version { get; }
 	}
 }

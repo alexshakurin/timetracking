@@ -1,0 +1,5 @@
+F:\Projects\TimeTracking\TimeTracking.Commands\bin\Debug\TimeTracking.Commands.dll
+F:\Projects\TimeTracking\TimeTracking.Commands\bin\Debug\TimeTracking.Commands.pdb
+F:\Projects\TimeTracking\TimeTracking.Commands\obj\Debug\TimeTracking.Commands.csprojResolveAssemblyReference.cache
+F:\Projects\TimeTracking\TimeTracking.Commands\obj\Debug\TimeTracking.Commands.dll
+F:\Projects\TimeTracking\TimeTracking.Commands\obj\Debug\TimeTracking.Commands.pdb

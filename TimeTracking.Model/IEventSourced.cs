@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 
 namespace TimeTracking.Model
 {
@@ -8,7 +7,7 @@ namespace TimeTracking.Model
 	{
 		Guid Id { get; }
 
-		int Version { get; }
+		long Version { get; }
 
 		IReadOnlyCollection<IVersionedEvent> Events { get; }
 	}

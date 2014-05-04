@@ -1,0 +1,7 @@
+ver. 1.0.0.0 (debug) [DEBUG 2014-05-04 17:55:01,148] - Starting application
+ver. 1.0.0.0 (debug) [DEBUG 2014-05-04 17:55:04,020] - Change tracking state by user request at 04.05.2014 17:55:04
+ver. 1.0.0.0 (debug) [DEBUG 2014-05-04 17:55:04,045] - Time tracking started at 04.05.2014 17:55:04
+ver. 1.0.0.0 (debug) [DEBUG 2014-05-04 17:55:25,292] - Stopping time tracking at 04.05.2014 17:55:25 by user logoff/lock
+ver. 1.0.0.0 (debug) [DEBUG 2014-05-04 17:55:25,304] - Time tracking stopped at 04.05.2014 17:55:25
+ver. 1.0.0.0 (debug) [DEBUG 2014-05-04 17:55:36,548] - Resuming time tracking at 04.05.2014 17:55:36 by session unlock
+ver. 1.0.0.0 (debug) [DEBUG 2014-05-04 17:55:36,549] - Time tracking started at 04.05.2014 17:55:36

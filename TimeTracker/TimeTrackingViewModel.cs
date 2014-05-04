@@ -2,13 +2,18 @@
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Media;
-using TimeTracking.Export;
+using TimeTracking.Commands;
+using TimeTracking.Extensions;
+using TimeTracking.Infrastructure;
+using TimeTracking.Logging;
 
 namespace TimeTracker
 {
 	public class TimeTrackingViewModel : ViewModel
 	{
-		private readonly ITimeService timeService;
+		private readonly ICommandBus commandBus;
+
+		private Guid workingTimeId;
 
 		private IDisposable subscription;
 		private IDisposable confirmationSubscription;
@@ -68,33 +73,46 @@ namespace TimeTracker
 			}
 		}
 
-		public TimeTrackingViewModel(ITimeService timeService)
+		public TimeTrackingViewModel(ICommandBus commandBus)
 		{
-			this.timeService = timeService;
-			LoadTime();
+			this.commandBus = commandBus;
+			workingTimeId = Guid.NewGuid();
 		}
 
-		private void LoadTime()
-		{
-			var loadedTime = timeService.LoadTime(DateTime.Now);
-			if (loadedTime.HasValue)
-			{
-				time = loadedTime.Value;
-			}
-			else
-			{
-				time = new TimeSpan();
-			}
+		//private void LoadTime()
+		//{
+		//	var loadedTime = timeService.LoadTime(DateTime.Now);
+		//	if (loadedTime.HasValue)
+		//	{
+		//		time = loadedTime.Value;
+		//	}
+		//	else
+		//	{
+		//		time = new TimeSpan();
+		//	}
 
-			TotalTime = time.ToString();
-		}
+		//	TotalTime = time.ToString();
+		//}
 
 		public override void Cleanup()
 		{
 			base.Cleanup();
 			StopTrackingTime();
 		}
-		
+
+		public void Stop()
+		{
+			StopTrackingTime();
+		}
+
+		public void Start()
+		{
+			if (!isStarted)
+			{
+				StartTrackingTime();
+			}
+		}
+
 		public void StartOrStop()
 		{
 			if (isStarted)
@@ -109,22 +127,26 @@ namespace TimeTracker
 
 		private void StopTrackingTime()
 		{
-			subscription.Dispose();
+			LogHelper.Debug(string.Format("Time tracking stopped at {0}", DateTime.Now));
+
+			subscription.MaybeDo(s => s.Dispose());
 			subscription = null;
-			confirmationSubscription.Dispose();
+			confirmationSubscription.MaybeDo(cs => cs.Dispose());
 			confirmationSubscription = null;
 			isStarted = false;
 		}
 
 		private void StartTrackingTime()
 		{
+			LogHelper.Debug(string.Format("Time tracking started at {0}", DateTime.Now));
+
 			previousValue = new DateTimeOffset(DateTime.Now);
 			subscription = Observable.Interval(TimeSpan.FromSeconds(1))
 				.Timestamp()
 				.ObserveOnDispatcher()
 				.Subscribe(IncreaseWorkingTime);
 
-			subscription = Observable.Interval(TimeSpan.FromSeconds(5))
+			confirmationSubscription = Observable.Interval(TimeSpan.FromSeconds(5))
 				.Timestamp()
 				.ObserveOnDispatcher()
 				.Subscribe(DisplayWorkingTime);
@@ -138,29 +160,39 @@ namespace TimeTracker
 			previousValue = msg.Timestamp;
 			time = time.Add(workingTime);
 
-			timeService.SaveTime(time, DateTime.Now);
+			var totalMinutes = (int) workingTime.TotalMinutes;
+
+			if (totalMinutes > 0)
+			{
+				commandBus.Send(new RegisterTimeCommand(workingTimeId,
+					DateTime.Now.Date,
+					totalMinutes,
+					"Test"));
+			}
+
+			//timeService.SaveTime(time, DateTime.Now);
 
 			TotalTime = string.Format("{0:D2}:{1:D2}:{2:D2}", time.Hours, time.Minutes, time.Seconds);
 		}
 
 		private void DisplayWorkingTime(Timestamped<long> msg)
 		{
-			try
-			{
-				var serverTime = timeService.LoadTime(DateTime.Now);
+			//try
+			//{
+			//	var serverTime = timeService.LoadTime(DateTime.Now);
 
-				if (!serverTime.HasValue)
-				{
-					serverTime = new TimeSpan();
-				}
+			//	if (!serverTime.HasValue)
+			//	{
+			//		serverTime = new TimeSpan();
+			//	}
 
-				ConfirmedTime = string.Format("{0:D2}:{1:D2}:{2:D2}", serverTime.Value.Hours, serverTime.Value.Minutes, serverTime.Value.Seconds);
-				ConfirmedTimeForeground = Brushes.Green;
-			}
-			catch (Exception)
-			{
-				ConfirmedTimeForeground = Brushes.Red;
-			}
+			//	ConfirmedTime = string.Format("{0:D2}:{1:D2}:{2:D2}", serverTime.Value.Hours, serverTime.Value.Minutes, serverTime.Value.Seconds);
+			//	ConfirmedTimeForeground = Brushes.Green;
+			//}
+			//catch (Exception)
+			//{
+			//	ConfirmedTimeForeground = Brushes.Red;
+			//}
 		}
 	}
 }

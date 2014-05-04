@@ -1,0 +1,8 @@
+F:\Projects\TimeTracking\TimeTracking.Logging\bin\Debug\log4net.config
+F:\Projects\TimeTracking\TimeTracking.Logging\bin\Debug\TimeTracking.Logging.dll
+F:\Projects\TimeTracking\TimeTracking.Logging\bin\Debug\TimeTracking.Logging.pdb
+F:\Projects\TimeTracking\TimeTracking.Logging\bin\Debug\log4net.dll
+F:\Projects\TimeTracking\TimeTracking.Logging\bin\Debug\log4net.xml
+F:\Projects\TimeTracking\TimeTracking.Logging\obj\Debug\TimeTracking.Logging.csprojResolveAssemblyReference.cache
+F:\Projects\TimeTracking\TimeTracking.Logging\obj\Debug\TimeTracking.Logging.dll
+F:\Projects\TimeTracking\TimeTracking.Logging\obj\Debug\TimeTracking.Logging.pdb

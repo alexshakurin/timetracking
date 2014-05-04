@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.Practices.ServiceLocation;
+﻿using Microsoft.Practices.ServiceLocation;
 using TimeTracking.EventHandlers;
 using TimeTracking.Events;
 

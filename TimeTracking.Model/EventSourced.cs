@@ -10,9 +10,9 @@ namespace TimeTracking.Model
 		private readonly List<IVersionedEvent> pendingEvents = new List<IVersionedEvent>();
 
 		private readonly Guid id;
-		private int version = -1;
+		private long version;
 
-		public int Version
+		public long Version
 		{
 			get
 			{
