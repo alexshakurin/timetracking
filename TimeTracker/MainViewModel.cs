@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Win32;
+using TimeTracking.Extensions;
 using TimeTracking.Logging;
 
 namespace TimeTracker
@@ -12,7 +13,9 @@ namespace TimeTracker
 	{
 		private ICommand startStopCommand;
 
-		public TimeTrackingViewModel TimeTrackingViewModel { get; private set; }
+		private bool isPaused;
+
+		public ITimeTrackingViewModel TimeTrackingViewModel { get; private set; }
 
 		public ICommand StartStopCommand
 		{
@@ -29,7 +32,7 @@ namespace TimeTracker
 		
 		public MainViewModel()
 		{
-			TimeTrackingViewModel = ServiceLocator.Current.GetInstance<TimeTrackingViewModel>();
+			TimeTrackingViewModel = ServiceLocator.Current.GetInstance<ITimeTrackingViewModel>();
 
 			SystemEvents.PowerModeChanged += PowerModeChanged;
 			SystemEvents.SessionSwitch += SessionSwitch;
@@ -41,38 +44,55 @@ namespace TimeTracker
 			SystemEvents.SessionSwitch -= SessionSwitch;
 
 			base.Cleanup();
+
+			TimeTrackingViewModel.MaybeDo(ttvm => ttvm.Stop());
 		}
 
 		private void SessionSwitch(object sender, SessionSwitchEventArgs e)
 		{
-			if (e.Reason == SessionSwitchReason.SessionLock || e.Reason == SessionSwitchReason.SessionLogoff)
+			if (e.Reason.In(new[] {SessionSwitchReason.SessionLock, SessionSwitchReason.SessionLogoff})
+				&& TimeTrackingViewModel.IsStarted)
 			{
-				LogHelper.Debug(string.Format("Stopping time tracking at {0} by user logoff/lock", DateTime.Now));
+				LogHelper.Debug(string.Format("Pausing time tracking at {0} by {1}",
+					DateTime.Now,
+					Enum.GetName(typeof(SessionSwitchReason), e.Reason)));
 
-				TimeTrackingViewModel.Stop();
+				PauseTracking();
 			}
-			else if(e.Reason == SessionSwitchReason.SessionUnlock)
+			else if (e.Reason == SessionSwitchReason.SessionUnlock && isPaused)
 			{
 				LogHelper.Debug(string.Format("Resuming time tracking at {0} by session unlock", DateTime.Now));
 
-				TimeTrackingViewModel.Start();
+				ResumeTracking();
 			}
 		}
 
 		private void PowerModeChanged(object sender, PowerModeChangedEventArgs e)
 		{
-			if (e.Mode == PowerModes.Suspend)
+			if (e.Mode == PowerModes.Suspend && TimeTrackingViewModel.IsStarted)
 			{
-				LogHelper.Debug(string.Format("Stopping time tracking at {0} by system suspend", DateTime.Now));
+				LogHelper.Debug(string.Format("Pausing time tracking at {0} by system suspend", DateTime.Now));
 
-				TimeTrackingViewModel.Stop();
+				PauseTracking();
 			}
-			else if(e.Mode == PowerModes.Resume)
+			else if (e.Mode == PowerModes.Resume && isPaused)
 			{
 				LogHelper.Debug(string.Format("Resuming time tracking at {0} by system resume", DateTime.Now));
 
-				TimeTrackingViewModel.Start();
+				ResumeTracking();
 			}
+		}
+
+		private void ResumeTracking()
+		{
+			TimeTrackingViewModel.Start();
+			isPaused = false;
+		}
+
+		private void PauseTracking()
+		{
+			TimeTrackingViewModel.Stop();
+			isPaused = true;
 		}
 
 		private void StartOrStop()

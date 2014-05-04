@@ -9,11 +9,12 @@ using TimeTracking.Logging;
 
 namespace TimeTracker
 {
-	public class TimeTrackingViewModel : ViewModel
+	public class TimeTrackingViewModel : ViewModel, ITimeTrackingViewModel
 	{
 		private readonly ICommandBus commandBus;
+		private readonly Guid workingTimeId;
 
-		private Guid workingTimeId;
+		private bool isPaused;
 
 		private IDisposable subscription;
 		private IDisposable confirmationSubscription;
@@ -73,6 +74,36 @@ namespace TimeTracker
 			}
 		}
 
+		public bool IsPaused
+		{
+			get { return isPaused; }
+			private set
+			{
+				if (isPaused == value)
+				{
+					return;
+				}
+
+				isPaused = value;
+				RaisePropertyChanged(() => IsPaused);
+			}
+		}
+
+		public bool IsStarted
+		{
+			get { return isStarted; }
+			private set
+			{
+				if (isStarted == value)
+				{
+					return;
+				}
+
+				isStarted = value;
+				RaisePropertyChanged(() => IsStarted);
+			}
+		}
+
 		public TimeTrackingViewModel(ICommandBus commandBus)
 		{
 			this.commandBus = commandBus;
@@ -102,12 +133,16 @@ namespace TimeTracker
 
 		public void Stop()
 		{
-			StopTrackingTime();
+			if (IsStarted)
+			{
+				StopTrackingTime();
+				IsPaused = true;
+			}
 		}
 
 		public void Start()
 		{
-			if (!isStarted)
+			if (IsPaused)
 			{
 				StartTrackingTime();
 			}
@@ -115,7 +150,7 @@ namespace TimeTracker
 
 		public void StartOrStop()
 		{
-			if (isStarted)
+			if (IsStarted)
 			{
 				StopTrackingTime();
 			}
@@ -133,7 +168,7 @@ namespace TimeTracker
 			subscription = null;
 			confirmationSubscription.MaybeDo(cs => cs.Dispose());
 			confirmationSubscription = null;
-			isStarted = false;
+			IsStarted = false;
 		}
 
 		private void StartTrackingTime()
@@ -151,7 +186,7 @@ namespace TimeTracker
 				.ObserveOnDispatcher()
 				.Subscribe(DisplayWorkingTime);
 
-			isStarted = true;
+			IsStarted = true;
 		}
 		
 		private void IncreaseWorkingTime(Timestamped<long> msg)

@@ -26,6 +26,7 @@ namespace TimeTracker
 
 			base.OnStartup(e);
 			container = new UnityContainer();
+			container.RegisterType<ITimeTrackingViewModel, TimeTrackingViewModel>();
 			container.RegisterType<IEventBus, EventBus>();
 			container.RegisterType<ICommandBus, SynchronousCommandBus>();
 			container.RegisterType<MainViewModel>();

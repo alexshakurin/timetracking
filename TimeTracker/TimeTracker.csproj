@@ -110,6 +110,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="FileSystemExport\FileSystemTimeService.cs" />
+    <Compile Include="ITimeTrackingViewModel.cs" />
     <Compile Include="RestApiExport\RestApiTimeService.cs" />
     <Compile Include="TimeTrackingViewModel.cs" />
     <Compile Include="ViewModel.cs" />
