@@ -14,8 +14,6 @@ namespace TimeTracker
 		private readonly ICommandBus commandBus;
 		private readonly Guid workingTimeId;
 
-		private bool isPaused;
-
 		private IDisposable subscription;
 		private IDisposable confirmationSubscription;
 
@@ -74,21 +72,6 @@ namespace TimeTracker
 			}
 		}
 
-		public bool IsPaused
-		{
-			get { return isPaused; }
-			private set
-			{
-				if (isPaused == value)
-				{
-					return;
-				}
-
-				isPaused = value;
-				RaisePropertyChanged(() => IsPaused);
-			}
-		}
-
 		public bool IsStarted
 		{
 			get { return isStarted; }
@@ -136,16 +119,12 @@ namespace TimeTracker
 			if (IsStarted)
 			{
 				StopTrackingTime();
-				IsPaused = true;
 			}
 		}
 
 		public void Start()
 		{
-			if (IsPaused)
-			{
-				StartTrackingTime();
-			}
+			StartTrackingTime();
 		}
 
 		public void StartOrStop()

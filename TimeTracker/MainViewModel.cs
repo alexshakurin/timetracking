@@ -17,6 +17,16 @@ namespace TimeTracker
 
 		public ITimeTrackingViewModel TimeTrackingViewModel { get; private set; }
 
+		public string ActionHeader
+		{
+			get
+			{
+				return TimeTrackingViewModel.Maybe(vm => vm.IsStarted)
+					? "Stop"
+					: "Start";
+			}
+		}
+
 		public ICommand StartStopCommand
 		{
 			get
@@ -100,6 +110,7 @@ namespace TimeTracker
 			LogHelper.Debug(string.Format("Change tracking state by user request at {0}", DateTime.Now));
 
 			TimeTrackingViewModel.StartOrStop();
+			RaisePropertyChanged(() => ActionHeader);
 		}
 	}
 }
