@@ -2,6 +2,8 @@
 {
 	public interface ITimeTrackingViewModel
 	{
+		string Memo { get; set; }
+
 		bool IsStarted { get; }
 
 		void Stop();

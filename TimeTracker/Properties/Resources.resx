@@ -123,6 +123,12 @@
   <data name="StopButton" xml:space="preserve">
     <value>Stop</value>
   </data>
+  <data name="TimeTrackingOff" xml:space="preserve">
+    <value>Time tracking is OFF</value>
+  </data>
+  <data name="TimeTrackingOn" xml:space="preserve">
+    <value>Time tracking is ON</value>
+  </data>
   <data name="Title" xml:space="preserve">
     <value>Time tracking</value>
   </data>

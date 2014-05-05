@@ -25,6 +25,23 @@ namespace TimeTracker
 
 		private string confirmedTime;
 
+		private string memo;
+
+		public string Memo
+		{
+			get { return memo; }
+			set
+			{
+				if (memo == value)
+				{
+					return;
+				}
+
+				memo = value;
+				RaisePropertyChanged(() => Memo);
+			}
+		}
+
 		private Brush confirmedTimeForeground;
 
 		public Brush ConfirmedTimeForeground
@@ -181,7 +198,7 @@ namespace TimeTracker
 				commandBus.Send(new RegisterTimeCommand(workingTimeId,
 					DateTime.Now.Date,
 					totalMinutes,
-					"Test"));
+					Memo));
 			}
 
 			//timeService.SaveTime(time, DateTime.Now);

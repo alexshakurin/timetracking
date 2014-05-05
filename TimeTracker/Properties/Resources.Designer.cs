@@ -79,6 +79,24 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Time tracking is OFF.
+        /// </summary>
+        public static string TimeTrackingOff {
+            get {
+                return ResourceManager.GetString("TimeTrackingOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time tracking is ON.
+        /// </summary>
+        public static string TimeTrackingOn {
+            get {
+                return ResourceManager.GetString("TimeTrackingOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Time tracking.
         /// </summary>
         public static string Title {
