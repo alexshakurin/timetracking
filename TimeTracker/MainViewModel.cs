@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Win32;
+using TimeTracker.Localization;
 using TimeTracking.Extensions;
 using TimeTracking.Logging;
 
@@ -11,6 +12,8 @@ namespace TimeTracker
 {
 	public class MainViewModel : ViewModelBase
 	{
+		private readonly ILocalizationService localizationService;
+
 		private ICommand startStopCommand;
 
 		private bool isPaused;
@@ -22,8 +25,8 @@ namespace TimeTracker
 			get
 			{
 				return TimeTrackingViewModel.Maybe(vm => vm.IsStarted)
-					? "Stop"
-					: "Start";
+					? localizationService.GetLocalizedString("StopButton")
+					: localizationService.GetLocalizedString("StartButton");
 			}
 		}
 
@@ -42,6 +45,8 @@ namespace TimeTracker
 		
 		public MainViewModel()
 		{
+			localizationService = ServiceLocator.Current.GetInstance<ILocalizationService>();
+
 			TimeTrackingViewModel = ServiceLocator.Current.GetInstance<ITimeTrackingViewModel>();
 
 			SystemEvents.PowerModeChanged += PowerModeChanged;

@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
+using TimeTracker.Localization;
 using TimeTracker.RestApiExport;
 using TimeTracking.CommandHandlers;
 using TimeTracking.Commands;
@@ -26,6 +28,7 @@ namespace TimeTracker
 
 			base.OnStartup(e);
 			container = new UnityContainer();
+			container.RegisterType<ILocalizationService, LocalizationService>();
 			container.RegisterType<ITimeTrackingViewModel, TimeTrackingViewModel>();
 			container.RegisterType<IEventBus, EventBus>();
 			container.RegisterType<ICommandBus, SynchronousCommandBus>();
