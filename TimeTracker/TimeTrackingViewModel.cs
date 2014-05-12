@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Windows.Input;
 using System.Windows.Media;
+using GalaSoft.MvvmLight.Command;
+using Microsoft.Practices.ServiceLocation;
+using TimeTracker.Views.ChangeTask;
 using TimeTracking.Commands;
 using TimeTracking.Extensions;
 using TimeTracking.Infrastructure;
@@ -13,6 +17,8 @@ namespace TimeTracker
 	{
 		private readonly ICommandBus commandBus;
 		private readonly Guid workingTimeId;
+
+		private ICommand changeTask;
 
 		private IDisposable subscription;
 		private IDisposable confirmationSubscription;
@@ -26,6 +32,36 @@ namespace TimeTracker
 		private string confirmedTime;
 
 		private string memo;
+
+		public ICommand ChangeTask
+		{
+			get
+			{
+				if (changeTask == null)
+				{
+					changeTask = new RelayCommand(ExecuteChangeTask, CanExecuteChangeTask);
+				}
+
+				return changeTask;
+			}
+		}
+
+		private string projectName;
+
+		public string ProjectName
+		{
+			get { return projectName; }
+			private set
+			{
+				if (projectName == value)
+				{
+					return;
+				}
+
+				projectName = value;
+				RaisePropertyChanged(() => ProjectName);
+			}
+		}
 
 		public string Memo
 		{
@@ -184,6 +220,16 @@ namespace TimeTracker
 
 			IsStarted = true;
 		}
+
+		private void RestartTrackingTime()
+		{
+			if (IsStarted)
+			{
+				StopTrackingTime();
+			}
+
+			StartTrackingTime();
+		}
 		
 		private void IncreaseWorkingTime(Timestamped<long> msg)
 		{
@@ -224,6 +270,26 @@ namespace TimeTracker
 			//{
 			//	ConfirmedTimeForeground = Brushes.Red;
 			//}
+		}
+
+		private bool CanExecuteChangeTask()
+		{
+			return true;
+		}
+
+		private void ExecuteChangeTask()
+		{
+			var changeTaskView = ServiceLocator.Current.GetInstance<IChangeTaskView>();
+			changeTaskView.ViewModel.SetDefaultValues(Memo, ProjectName);
+
+			var result = changeTaskView.ShowDialog();
+
+			if (result.HasValue && result.Value)
+			{
+				Memo = changeTaskView.ViewModel.Memo;
+				ProjectName = changeTaskView.ViewModel.ProjectName;
+				RestartTrackingTime();
+			}
 		}
 	}
 }

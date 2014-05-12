@@ -3,6 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:timeTracker="clr-namespace:TimeTracker"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         <timeTracker:ViewModelLocator x:Key="locator" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Common/Common.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <timeTracker:ViewModelLocator x:Key="locator" />
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

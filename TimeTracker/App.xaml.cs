@@ -4,6 +4,7 @@ using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using TimeTracker.Localization;
 using TimeTracker.RestApiExport;
+using TimeTracker.Views.ChangeTask;
 using TimeTracking.CommandHandlers;
 using TimeTracking.Commands;
 using TimeTracking.Export;
@@ -24,6 +25,9 @@ namespace TimeTracker
 		private IUnityContainer container;
 		protected override void OnStartup(StartupEventArgs e)
 		{
+			//System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("de");
+			//System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("de");
+
 			LogHelper.Debug("Starting application");
 
 			base.OnStartup(e);
@@ -41,6 +45,8 @@ namespace TimeTracker
 			container.RegisterType<ICommandHandler<RegisterTimeCommand>, RegisterTimeCommandHandler>();
 			container.RegisterType<EventStoreDbContext>(new TransientLifetimeManager(), new InjectionConstructor("EventStore"));
 			container.RegisterType(typeof(IEventSourcedRepository<>), typeof(SqlEventSourcedRepository<>), new ContainerControlledLifetimeManager());
+
+			container.RegisterType<IChangeTaskView, ChangeTaskView>();
 
 			ServiceLocator.SetLocatorProvider(() => new UnityServiceLocator(container));
 		}

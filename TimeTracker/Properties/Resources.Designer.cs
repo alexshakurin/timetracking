@@ -61,6 +61,69 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string CancelButton {
+            get {
+                return ResourceManager.GetString("CancelButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change....
+        /// </summary>
+        public static string ChangeTask {
+            get {
+                return ResourceManager.GetString("ChangeTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task memo:.
+        /// </summary>
+        public static string ChangeTask_TaskMemo {
+            get {
+                return ResourceManager.GetString("ChangeTask_TaskMemo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task project:.
+        /// </summary>
+        public static string ChangeTask_TaskProject {
+            get {
+                return ResourceManager.GetString("ChangeTask_TaskProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change current task.
+        /// </summary>
+        public static string ChangeTaskTitle {
+            get {
+                return ResourceManager.GetString("ChangeTaskTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current task.
+        /// </summary>
+        public static string CurrentTaskHeader {
+            get {
+                return ResourceManager.GetString("CurrentTaskHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string OkButton {
+            get {
+                return ResourceManager.GetString("OkButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start.
         /// </summary>
         public static string StartButton {

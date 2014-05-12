@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l="clr-namespace:TimeTracker.Properties"
         ResizeMode="CanMinimize"
-        Title="{x:Static l:Resources.Title}" Height="200" Width="350"
+        Title="{x:Static l:Resources.Title}" Height="300" Width="350"
         DataContext="{Binding Main, Source={StaticResource locator}}">
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo Description="Start/Stop">
@@ -47,8 +47,33 @@
         <Button Grid.Column="2" Grid.Row="0" Margin="5" Content="{Binding ActionHeader}" FontSize="12" Command="{Binding StartStopCommand}" />
 
         <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-                   TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
-                   ToolTip="{Binding TimeTrackingViewModel.Memo}"/>
-        
+                   />
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*" MinHeight="50" MaxHeight="150" />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Margin" Value="5" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                </Style>
+            </Grid.Resources>
+            <TextBlock Grid.Row="0" Text="{x:Static l:Resources.CurrentTaskHeader}" FontWeight="Bold" FontSize="12" />
+            <TextBlock Grid.Row="1" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
+                       ToolTip="{Binding TimeTrackingViewModel.ProjectName}"
+                       Foreground="Green"
+                       FontSize="14"
+                       Text="{Binding TimeTrackingViewModel.ProjectName}" />
+            <TextBlock Grid.Row="2" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
+                   ToolTip="{Binding TimeTrackingViewModel.Memo}" Text="{Binding TimeTrackingViewModel.Memo}" />
+            <Button Grid.Row="3" HorizontalAlignment="Left" Margin="5" Content="{x:Static l:Resources.ChangeTask}"
+                    Height="24" Command="{Binding TimeTrackingViewModel.ChangeTask}"/>
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+            
+        </Grid>
     </Grid>
 </Window>

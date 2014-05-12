@@ -1,8 +1,14 @@
-﻿namespace TimeTracker
+﻿using System.Windows.Input;
+
+namespace TimeTracker
 {
 	public interface ITimeTrackingViewModel
 	{
-		string Memo { get; set; }
+		ICommand ChangeTask { get; }
+
+		string Memo { get; }
+
+		string ProjectName { get; }
 
 		bool IsStarted { get; }
 

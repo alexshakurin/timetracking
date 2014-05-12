@@ -2,7 +2,7 @@
 
 namespace TimeTracker
 {
-	public class ViewModel : ViewModelBase
+	public abstract class ViewModel : ViewModelBase
 	{
 		public override void Cleanup()
 		{
