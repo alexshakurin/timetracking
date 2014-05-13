@@ -1,24 +1,29 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace TimeTracking.Model.Events
 {
+	[DataContract]
 	public class WorkingTimeRegistered : VersionedEvent
 	{
+		[DataMember]
 		public DateTime Date { get; private set; }
 
-		public int Minutes { get; private set; }
+		[DataMember]
+		public TimeSpan Time { get; private set; }
 
+		[DataMember]
 		public string Memo { get; private set; }
 
-		public WorkingTimeRegistered(DateTime date, int minutes, string memo)
+		public WorkingTimeRegistered(DateTime date, TimeSpan time, string memo)
 		{
-			if (minutes == 0)
+			if (time.TotalSeconds == 0)
 			{
-				throw new ArgumentException("Minutes cannot be zero", "minutes");
+				throw new ArgumentException("Total time cannot be zero", "time");
 			}
 
 			Date = date.Date;
-			Minutes = minutes;
+			Time = time;
 			Memo = memo;
 		}
 	}

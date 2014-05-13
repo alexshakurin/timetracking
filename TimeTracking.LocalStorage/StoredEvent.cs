@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace TimeTracking.LocalStorage
 {
 	public class StoredEvent

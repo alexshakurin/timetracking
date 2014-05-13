@@ -16,7 +16,8 @@ namespace TimeTracker
 	public class TimeTrackingViewModel : ViewModel, ITimeTrackingViewModel
 	{
 		private readonly ICommandBus commandBus;
-		private readonly Guid workingTimeId;
+		private string previousKey;
+		private const string format = "yyyy-MM-dd";
 
 		private ICommand changeTask;
 
@@ -24,7 +25,8 @@ namespace TimeTracker
 		private IDisposable confirmationSubscription;
 
 		private DateTimeOffset previousValue;
-		private TimeSpan time;
+		private TimeSpan timeSinceLastUpdate;
+		private TimeSpan totalTimeForPeriod;
 
 		private string totalTime;
 		private bool isStarted;
@@ -143,7 +145,6 @@ namespace TimeTracker
 		public TimeTrackingViewModel(ICommandBus commandBus)
 		{
 			this.commandBus = commandBus;
-			workingTimeId = Guid.NewGuid();
 		}
 
 		//private void LoadTime()
@@ -233,23 +234,33 @@ namespace TimeTracker
 		
 		private void IncreaseWorkingTime(Timestamped<long> msg)
 		{
-			var workingTime = msg.Timestamp - previousValue;
-			previousValue = msg.Timestamp;
-			time = time.Add(workingTime);
+			var currentKey = DateTime.Now.Date.ToString(format);
 
-			var totalMinutes = (int) workingTime.TotalMinutes;
-
-			if (totalMinutes > 0)
+			if (!string.IsNullOrEmpty(previousKey)
+				&& !string.Equals(previousKey, currentKey, StringComparison.OrdinalIgnoreCase))
 			{
-				commandBus.Send(new RegisterTimeCommand(workingTimeId,
-					DateTime.Now.Date,
-					totalMinutes,
-					Memo));
+				commandBus.Send(new RegisterTimeCommand(previousKey, DateTime.Now.Date, timeSinceLastUpdate, Memo));
+				timeSinceLastUpdate = TimeSpan.FromSeconds(0);
+				totalTimeForPeriod = TimeSpan.FromSeconds(0);
+			}
+			else
+			{
+				var workingTime = msg.Timestamp - previousValue;
+				previousValue = msg.Timestamp;
+				timeSinceLastUpdate = timeSinceLastUpdate.Add(workingTime);
+				totalTimeForPeriod = totalTimeForPeriod.Add(workingTime);
+
+				const double secondsToSave = 20;
+				if (timeSinceLastUpdate.TotalSeconds > secondsToSave)
+				{
+					commandBus.Send(new RegisterTimeCommand(currentKey, DateTime.Now.Date, timeSinceLastUpdate, Memo));
+					timeSinceLastUpdate = TimeSpan.FromSeconds(0);
+				}
 			}
 
-			//timeService.SaveTime(time, DateTime.Now);
+			previousKey = currentKey;
 
-			TotalTime = string.Format("{0:D2}:{1:D2}:{2:D2}", time.Hours, time.Minutes, time.Seconds);
+			TotalTime = string.Format("{0:D2}:{1:D2}:{2:D2}", totalTimeForPeriod.Hours, totalTimeForPeriod.Minutes, totalTimeForPeriod.Seconds);
 		}
 
 		private void DisplayWorkingTime(Timestamped<long> msg)

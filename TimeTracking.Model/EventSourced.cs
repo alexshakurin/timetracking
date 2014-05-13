@@ -9,7 +9,7 @@ namespace TimeTracking.Model
 		private readonly Dictionary<Type, Action<IVersionedEvent>> handlers = new Dictionary<Type, Action<IVersionedEvent>>();
 		private readonly List<IVersionedEvent> pendingEvents = new List<IVersionedEvent>();
 
-		private readonly Guid id;
+		private readonly string id;
 		private long version;
 
 		public long Version
@@ -20,7 +20,7 @@ namespace TimeTracking.Model
 			}
 		}
 
-		public Guid Id
+		public string Id
 		{
 			get
 			{
@@ -36,7 +36,7 @@ namespace TimeTracking.Model
 			}
 		}
 
-		protected EventSourced(Guid id)
+		protected EventSourced(string id)
 		{
 			this.id = id;
 		}

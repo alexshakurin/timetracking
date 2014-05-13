@@ -1,11 +1,15 @@
-﻿using System;
+﻿
+using System.Runtime.Serialization;
 
 namespace TimeTracking.Model
 {
+	[DataContract]
 	public class VersionedEvent : IVersionedEvent
 	{
-		public Guid SourceId { get; internal set; }
+		[DataMember]
+		public string SourceId { get; internal set; }
 
+		[DataMember]
 		public long Version { get; internal set; }
 	}
 }

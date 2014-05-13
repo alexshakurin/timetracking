@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace TimeTracking.Model
 {
 	public interface IEventSourced
 	{
-		Guid Id { get; }
+		string Id { get; }
 
 		long Version { get; }
 

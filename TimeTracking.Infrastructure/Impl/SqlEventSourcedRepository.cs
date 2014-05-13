@@ -13,7 +13,7 @@ namespace TimeTracking.Infrastructure.Impl
 		private static readonly string sourceType = typeof(T).Name;
 		private readonly ITextSerializer serializer;
 		private readonly Func<EventStoreDbContext> contextFactory;
-		private readonly Func<Guid, IEnumerable<IVersionedEvent>, T> entityFactory;
+		private readonly Func<string, IEnumerable<IVersionedEvent>, T> entityFactory;
 
 		public SqlEventSourcedRepository(ITextSerializer serializer,
 			Func<EventStoreDbContext> contextFactory)
@@ -21,7 +21,7 @@ namespace TimeTracking.Infrastructure.Impl
 			this.serializer = serializer;
 			this.contextFactory = contextFactory;
 
-			var constructor = typeof(T).GetConstructor(new[] { typeof(Guid), typeof(IEnumerable<IVersionedEvent>) });
+			var constructor = typeof(T).GetConstructor(new[] { typeof(string), typeof(IEnumerable<IVersionedEvent>) });
 			if (constructor == null)
 			{
 				throw new InvalidCastException("Type T must have a constructor with the following signature: .ctor(Guid, IEnumerable<IVersionedEvent>)");
@@ -30,13 +30,12 @@ namespace TimeTracking.Infrastructure.Impl
 			entityFactory = (id, events) => (T)constructor.Invoke(new object[] { id, events });
 		}
 
-		public T Find(Guid id)
+		public T Find(string id)
 		{
-			var stringId = id.ToString();
 			using (var context = contextFactory.Invoke())
 			{
 				var deserialized = context.Set<StoredEvent>()
-					.Where(x => x.AggregateId == stringId && x.AggregateType == sourceType)
+					.Where(x => x.AggregateId == id && x.AggregateType == sourceType)
 					.OrderBy(x => x.Version)
 					.AsEnumerable()
 					.Select(Deserialize)
@@ -74,7 +73,7 @@ namespace TimeTracking.Infrastructure.Impl
 				serializer.Serialize(writer, e);
 				serialized = new StoredEvent
 				{
-					AggregateId = e.SourceId.ToString(),
+					AggregateId = e.SourceId,
 					AggregateType = sourceType,
 					Version = e.Version,
 					Payload = writer.ToString(),

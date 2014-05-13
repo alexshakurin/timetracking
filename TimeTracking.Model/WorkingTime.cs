@@ -7,32 +7,33 @@ namespace TimeTracking.Model
 {
 	public class WorkingTime : EventSourced
 	{
-		public int TotalMinutes { get; private set; }
+		public TimeSpan TotalTime { get; private set; }
 
-		public WorkingTime(Guid id) : base(id)
+		public WorkingTime(string id)
+			: base(id)
 		{
 			Handles<WorkingTimeRegistered>(OnWorkingTimeRegistered);
 		}
 
-		public WorkingTime(Guid id, IEnumerable<IVersionedEvent> history)
-            : this(id)
-        {
-            LoadFrom(history.ToList().AsReadOnly());
-        }
-
-		public void RegisterTime(DateTime date, int minutes, string memo)
+		public WorkingTime(string id, IEnumerable<IVersionedEvent> history)
+			: this(id)
 		{
-			if (TotalMinutes == 0 && minutes < 0)
+			LoadFrom(history.ToList().AsReadOnly());
+		}
+
+		public void RegisterTime(DateTime date, TimeSpan time, string memo)
+		{
+			if (TotalTime.TotalSeconds == 0 && time.TotalSeconds < 0)
 			{
-				throw new ArgumentOutOfRangeException("minutes");
+				throw new ArgumentOutOfRangeException("time", "Can't add negative time because working time is zero");
 			}
 
-			Update(new WorkingTimeRegistered(date, minutes, memo));
+			Update(new WorkingTimeRegistered(date, time, memo));
 		}
 
 		private void OnWorkingTimeRegistered(WorkingTimeRegistered @event)
 		{
-			TotalMinutes += @event.Minutes;
+			TotalTime += @event.Time;
 		}
 	}
 }

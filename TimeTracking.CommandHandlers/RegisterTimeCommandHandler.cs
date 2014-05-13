@@ -23,7 +23,7 @@ namespace TimeTracking.CommandHandlers
 				workingTime = new WorkingTime(command.WorkingTimeId);
 			}
 
-			workingTime.RegisterTime(command.Date, command.Minutes, command.Memo);
+			workingTime.RegisterTime(command.Date, command.Time, command.Memo);
 
 			eventSourcedRepository.Save(workingTime, command.CommandId.ToString());
 		}

@@ -1,5 +1,4 @@
-﻿using System;
-using TimeTracking.Model;
+﻿using TimeTracking.Model;
 
 namespace TimeTracking.Infrastructure
 {
@@ -10,7 +9,7 @@ namespace TimeTracking.Infrastructure
 		/// </summary>
 		/// <param name="id">The id of the entity</param>
 		/// <returns>The hydrated entity, or null if it does not exist.</returns>
-		T Find(Guid id);
+		T Find(string id);
 
 		/// <summary>
 		/// Saves the event sourced entity.

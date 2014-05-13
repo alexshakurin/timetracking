@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Windows;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
@@ -25,6 +26,8 @@ namespace TimeTracker
 		private IUnityContainer container;
 		protected override void OnStartup(StartupEventArgs e)
 		{
+			var format = "yyyy-MM-dd";
+			Console.WriteLine(DateTime.Now.Date.ToString(format));
 			//System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("de");
 			//System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("de");
 
