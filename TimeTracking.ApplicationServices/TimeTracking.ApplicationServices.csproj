@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AA6A42D2-39A7-40A9-BB28-25C473ACE053}</ProjectGuid>
+    <ProjectGuid>{189C4FA8-208C-4420-B230-F036A5E9400D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TimeTracking.CommandHandlers</RootNamespace>
-    <AssemblyName>TimeTracking.CommandHandlers</AssemblyName>
+    <RootNamespace>TimeTracking.ApplicationServices</RootNamespace>
+    <AssemblyName>TimeTracking.ApplicationServices</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,44 +30,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\RegisterTimeException.cs" />
+    <Compile Include="Dialogs\IMessageBoxService.cs" />
+    <Compile Include="Dialogs\MessageBoxService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegisterTimeCommandHandler.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TimeTracking.Commands\TimeTracking.Commands.csproj">
-      <Project>{7db4e368-0a3b-4206-b95a-3ac4fa274e03}</Project>
-      <Name>TimeTracking.Commands</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TimeTracking.Infrastructure\TimeTracking.Infrastructure.csproj">
-      <Project>{91fc79e7-0a4f-42e1-94ec-1474a81efdc4}</Project>
-      <Name>TimeTracking.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TimeTracking.Logging\TimeTracking.Logging.csproj">
-      <Project>{8c15d30d-92b2-4d63-a51c-a401bd823f7e}</Project>
-      <Name>TimeTracking.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TimeTracking.Model\TimeTracking.Model.csproj">
-      <Project>{1bd06df3-22a6-4f01-83eb-d468ac039c76}</Project>
-      <Name>TimeTracking.Model</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

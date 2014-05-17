@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using GalaSoft.MvvmLight;
 using TimeTracking.Extensions;
 

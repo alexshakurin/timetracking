@@ -127,6 +127,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="RestApiExport\RestApiTimeService.cs" />
+    <Compile Include="TimePublishing\TimePublisher.cs" />
     <Compile Include="TimeTrackingViewModel.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="ViewModelLocator.cs" />
@@ -195,6 +196,10 @@
     <Resource Include="Stopwatch.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TimeTracking.ApplicationServices\TimeTracking.ApplicationServices.csproj">
+      <Project>{189c4fa8-208c-4420-b230-f036a5e9400d}</Project>
+      <Name>TimeTracking.ApplicationServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TimeTracking.CommandHandlers\TimeTracking.CommandHandlers.csproj">
       <Project>{aa6a42d2-39a7-40a9-bb28-25c473ace053}</Project>
       <Name>TimeTracking.CommandHandlers</Name>

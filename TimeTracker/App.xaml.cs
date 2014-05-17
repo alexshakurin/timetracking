@@ -1,11 +1,11 @@
-﻿using System;
-using System.Globalization;
-using System.Windows;
+﻿using System.Windows;
+using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using TimeTracker.Localization;
 using TimeTracker.RestApiExport;
 using TimeTracker.Views.ChangeTask;
+using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.CommandHandlers;
 using TimeTracking.Commands;
 using TimeTracking.Export;
@@ -24,10 +24,14 @@ namespace TimeTracker
 	public partial class App
 	{
 		private IUnityContainer container;
+
+		static App()
+		{
+			DispatcherHelper.Initialize();
+		}
+
 		protected override void OnStartup(StartupEventArgs e)
 		{
-			var format = "yyyy-MM-dd";
-			Console.WriteLine(DateTime.Now.Date.ToString(format));
 			//System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("de");
 			//System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("de");
 
@@ -36,6 +40,7 @@ namespace TimeTracker
 			base.OnStartup(e);
 			container = new UnityContainer();
 			container.RegisterType<ILocalizationService, LocalizationService>();
+			container.RegisterType<IMessageBoxService, MessageBoxService>();
 			container.RegisterType<ITimeTrackingViewModel, TimeTrackingViewModel>();
 			container.RegisterType<IEventBus, EventBus>();
 			container.RegisterType<ICommandBus, SynchronousCommandBus>();

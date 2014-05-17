@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.ServiceLocation;
+﻿using System.Threading.Tasks;
+using Microsoft.Practices.ServiceLocation;
 using TimeTracking.Commands;
 using TimeTracking.Infrastructure.CommandHandlers;
 
@@ -17,6 +18,11 @@ namespace TimeTracking.Infrastructure.Impl
 			//{
 			//	handler.Handle(command);
 			//}
+		}
+
+		public async Task Publish<TCommand>(TCommand command) where TCommand : IDomainCommand
+		{
+			await Task.Run(() => Send(command));
 		}
 	}
 }

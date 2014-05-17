@@ -142,6 +142,24 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string TimeRegistrationError_Caption {
+            get {
+                return ResourceManager.GetString("TimeRegistrationError_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured when trying to save time information.
+        /// </summary>
+        public static string TimeRegistrationError_Message {
+            get {
+                return ResourceManager.GetString("TimeRegistrationError_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Time tracking is OFF.
         /// </summary>
         public static string TimeTrackingOff {

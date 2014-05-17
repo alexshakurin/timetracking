@@ -144,6 +144,12 @@
   <data name="StopButton" xml:space="preserve">
     <value>Stop</value>
   </data>
+  <data name="TimeRegistrationError_Caption" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="TimeRegistrationError_Message" xml:space="preserve">
+    <value>An error occured when trying to save time information</value>
+  </data>
   <data name="TimeTrackingOff" xml:space="preserve">
     <value>Time tracking is OFF</value>
   </data>

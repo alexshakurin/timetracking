@@ -1,6 +1,9 @@
-﻿using TimeTracking.Commands;
+﻿using System;
+using TimeTracking.CommandHandlers.Exceptions;
+using TimeTracking.Commands;
 using TimeTracking.Infrastructure;
 using TimeTracking.Infrastructure.CommandHandlers;
+using TimeTracking.Logging;
 using TimeTracking.Model;
 
 namespace TimeTracking.CommandHandlers
@@ -16,16 +19,25 @@ namespace TimeTracking.CommandHandlers
 
 		public void Handle(RegisterTimeCommand command)
 		{
-			var workingTime = eventSourcedRepository.Find(command.WorkingTimeId);
-
-			if (workingTime == null)
+			try
 			{
-				workingTime = new WorkingTime(command.WorkingTimeId);
+				var workingTime = eventSourcedRepository.Find(command.WorkingTimeId);
+
+				if (workingTime == null)
+				{
+					workingTime = new WorkingTime(command.WorkingTimeId);
+				}
+
+				workingTime.RegisterTime(command.Date, command.Time, command.Memo);
+
+				eventSourcedRepository.Save(workingTime, command.CommandId.ToString());
+			}
+			catch (Exception ex)
+			{
+				throw new RegisterTimeException(string.Format("Register time '{0}' failed", command), ex);
 			}
 
-			workingTime.RegisterTime(command.Date, command.Time, command.Memo);
-
-			eventSourcedRepository.Save(workingTime, command.CommandId.ToString());
+			LogHelper.Debug(command.ToString());
 		}
 	}
 }

@@ -4,8 +4,12 @@ using System.Reactive.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
+using TimeTracker.Localization;
+using TimeTracker.TimePublishing;
 using TimeTracker.Views.ChangeTask;
+using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.Commands;
 using TimeTracking.Extensions;
 using TimeTracking.Infrastructure;
@@ -16,6 +20,8 @@ namespace TimeTracker
 	public class TimeTrackingViewModel : ViewModel, ITimeTrackingViewModel
 	{
 		private readonly ICommandBus commandBus;
+		private readonly IMessageBoxService messageBox;
+		private readonly ILocalizationService localizationService;
 		private string previousKey;
 		private const string format = "yyyy-MM-dd";
 
@@ -142,9 +148,13 @@ namespace TimeTracker
 			}
 		}
 
-		public TimeTrackingViewModel(ICommandBus commandBus)
+		public TimeTrackingViewModel(ICommandBus commandBus,
+			IMessageBoxService messageBox,
+			ILocalizationService localizationService)
 		{
 			this.commandBus = commandBus;
+			this.messageBox = messageBox;
+			this.localizationService = localizationService;
 		}
 
 		//private void LoadTime()
@@ -239,7 +249,13 @@ namespace TimeTracker
 			if (!string.IsNullOrEmpty(previousKey)
 				&& !string.Equals(previousKey, currentKey, StringComparison.OrdinalIgnoreCase))
 			{
-				commandBus.Send(new RegisterTimeCommand(previousKey, DateTime.Now.Date, timeSinceLastUpdate, Memo));
+				TimePublisher.PublishTimeRegistration(commandBus,
+					previousKey,
+					DateTime.Now.Date,
+					timeSinceLastUpdate,
+					Memo,
+					OnTimeRegistrationErrorCallback);
+
 				timeSinceLastUpdate = TimeSpan.FromSeconds(0);
 				totalTimeForPeriod = TimeSpan.FromSeconds(0);
 			}
@@ -253,7 +269,13 @@ namespace TimeTracker
 				const double secondsToSave = 20;
 				if (timeSinceLastUpdate.TotalSeconds > secondsToSave)
 				{
-					commandBus.Send(new RegisterTimeCommand(currentKey, DateTime.Now.Date, timeSinceLastUpdate, Memo));
+					TimePublisher.PublishTimeRegistration(commandBus,
+						currentKey,
+						DateTime.Now.Date,
+						timeSinceLastUpdate,
+						Memo,
+						OnTimeRegistrationErrorCallback);
+
 					timeSinceLastUpdate = TimeSpan.FromSeconds(0);
 				}
 			}
@@ -301,6 +323,20 @@ namespace TimeTracker
 				ProjectName = changeTaskView.ViewModel.ProjectName;
 				RestartTrackingTime();
 			}
+		}
+
+		private void OnTimeRegistrationErrorCallback(Exception error)
+		{
+			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() => OnTimeRegistrationError(error)));
+		}
+
+		private void OnTimeRegistrationError(Exception error)
+		{
+			LogHelper.Error(error.ToString());
+			var caption = localizationService.GetLocalizedString("TimeRegistrationError_Caption");
+			var message = localizationService.GetLocalizedString("TimeRegistrationError_Message");
+
+			messageBox.ShowOkError(message, caption);
 		}
 	}
 }
