@@ -1,4 +1,5 @@
 ﻿using System;
+using TimeTracker.ViewModels;
 using TimeTracker.ViewModels.ChangeTask;
 using TimeTracking.Extensions;
 
@@ -20,15 +21,29 @@ namespace TimeTracker.Views.ChangeTask
 
 			DataContext = viewModel;
 			ViewModel = viewModel;
+			ViewModel.CloseRequest += ViewModelOnCloseRequest;
 			InitializeComponent();
+		}
+
+		private void ViewModelOnCloseRequest(object sender, CloseEventArgs e)
+		{
+			if (e.DialogResult != null)
+			{
+				DialogResult = e.DialogResult;
+			}
+			else
+			{
+				Close();
+			}
 		}
 
 		internal ChangeTaskView() : this(new ChangeTaskViewModel { Memo = "Lorem ipsum"})
 		{
 		}
 
-		protected override void OnClosed(System.EventArgs e)
+		protected override void OnClosed(EventArgs e)
 		{
+			ViewModel.MaybeDo(vm => vm.CloseRequest -= ViewModelOnCloseRequest);
 			ViewModel.MaybeDo(vm => vm.Cleanup());
 			base.OnClosed(e);
 		}

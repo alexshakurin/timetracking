@@ -9,7 +9,19 @@ namespace TimeTracker.ViewModels
 		private ICommand okCommand;
 		private ICommand cancelCommand;
 
-		public event EventHandler<CloseEventArgs> CloseRequest;
+		private EventHandler<CloseEventArgs> closeRequestHandler;
+
+		public event EventHandler<CloseEventArgs> CloseRequest
+		{
+			add
+			{
+				closeRequestHandler += value;
+			}
+			remove
+			{
+				closeRequestHandler -= value;
+			}
+		}
 
 		public ICommand OkCommand
 		{
@@ -52,9 +64,15 @@ namespace TimeTracker.ViewModels
 			OnCloseRequest(new CloseEventArgs(false));
 		}
 
+		public override void Cleanup()
+		{
+			closeRequestHandler = null;
+			base.Cleanup();
+		}
+
 		private void OnCloseRequest(CloseEventArgs args)
 		{
-			var local = CloseRequest;
+			var local = closeRequestHandler;
 			if (local != null)
 			{
 				local(this, args);

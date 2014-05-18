@@ -313,6 +313,7 @@ namespace TimeTracker
 		private void ExecuteChangeTask()
 		{
 			var changeTaskView = ServiceLocator.Current.GetInstance<IChangeTaskView>();
+
 			changeTaskView.ViewModel.SetDefaultValues(Memo, ProjectName);
 
 			var result = changeTaskView.ShowDialog();

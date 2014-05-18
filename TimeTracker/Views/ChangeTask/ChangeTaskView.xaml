@@ -1,14 +1,15 @@
-﻿<Window x:Class="TimeTracker.Views.ChangeTask.ChangeTaskView"
+﻿<controls:MetroWindow  x:Class="TimeTracker.Views.ChangeTask.ChangeTaskView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:properties="clr-namespace:TimeTracker.Properties"
         xmlns:behaviors="clr-namespace:TimeTracker.Behaviors"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         Title="{x:Static properties:Resources.ChangeTaskTitle}" Height="300" Width="300"
         ResizeMode="NoResize">
-    <i:Interaction.Behaviors>
+    <!--<i:Interaction.Behaviors>
         <behaviors:CloseWindowFromViewModel/> 
-    </i:Interaction.Behaviors>
+    </i:Interaction.Behaviors>-->
     <Window.InputBindings>
         <KeyBinding Command="{Binding CancelCommand}" Key="Escape" />
     </Window.InputBindings>
@@ -31,4 +32,4 @@
             </StackPanel>
         </Border>
     </Grid>
-</Window>
+</controls:MetroWindow>
