@@ -211,6 +211,10 @@
       <Project>{7db4e368-0a3b-4206-b95a-3ac4fa274e03}</Project>
       <Name>TimeTracking.Commands</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TimeTracking.Core\TimeTracking.Core.csproj">
+      <Project>{041a4649-2c42-4c3f-851b-17ab43f44b66}</Project>
+      <Name>TimeTracking.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TimeTracking.EventHandlers\TimeTracking.EventHandlers.csproj">
       <Project>{03b2debd-2994-499f-bca5-c1e49eff9c2a}</Project>
       <Name>TimeTracking.EventHandlers</Name>

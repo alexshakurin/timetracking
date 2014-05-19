@@ -36,6 +36,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.Logging", "Tim
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.ApplicationServices", "TimeTracking.ApplicationServices\TimeTracking.ApplicationServices.csproj", "{189C4FA8-208C-4420-B230-F036A5E9400D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.Core", "TimeTracking.Core\TimeTracking.Core.csproj", "{041A4649-2C42-4C3F-851B-17AB43F44B66}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{041B6A46-1F0D-497F-9710-36183785E093}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.Core.Tests.Unit", "TimeTracking.Core.Tests.Unit\TimeTracking.Core.Tests.Unit.csproj", "{B7FF62EE-EFD2-4B7D-BB7C-2F40154EFDF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,8 +96,19 @@ Global
 		{189C4FA8-208C-4420-B230-F036A5E9400D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{189C4FA8-208C-4420-B230-F036A5E9400D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{189C4FA8-208C-4420-B230-F036A5E9400D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{041A4649-2C42-4C3F-851B-17AB43F44B66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{041A4649-2C42-4C3F-851B-17AB43F44B66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{041A4649-2C42-4C3F-851B-17AB43F44B66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{041A4649-2C42-4C3F-851B-17AB43F44B66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7FF62EE-EFD2-4B7D-BB7C-2F40154EFDF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7FF62EE-EFD2-4B7D-BB7C-2F40154EFDF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7FF62EE-EFD2-4B7D-BB7C-2F40154EFDF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7FF62EE-EFD2-4B7D-BB7C-2F40154EFDF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B7FF62EE-EFD2-4B7D-BB7C-2F40154EFDF0} = {041B6A46-1F0D-497F-9710-36183785E093}
 	EndGlobalSection
 EndGlobal

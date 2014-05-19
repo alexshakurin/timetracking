@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Reactive;
-using System.Reactive.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
+using MahApps.Metro;
 using Microsoft.Practices.ServiceLocation;
 using TimeTracker.Localization;
 using TimeTracker.TimePublishing;
 using TimeTracker.Views.ChangeTask;
 using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.Commands;
-using TimeTracking.Extensions;
+using TimeTracking.Core;
 using TimeTracking.Infrastructure;
 using TimeTracking.Logging;
 
@@ -22,17 +21,10 @@ namespace TimeTracker
 		private readonly ICommandBus commandBus;
 		private readonly IMessageBoxService messageBox;
 		private readonly ILocalizationService localizationService;
-		private string previousKey;
+		private readonly ITimeTrackingCore core;
 		private const string format = "yyyy-MM-dd";
 
 		private ICommand changeTask;
-
-		private IDisposable subscription;
-		private IDisposable confirmationSubscription;
-
-		private DateTimeOffset previousValue;
-		private TimeSpan timeSinceLastUpdate;
-		private TimeSpan totalTimeForPeriod;
 
 		private string totalTime;
 		private bool isStarted;
@@ -155,22 +147,40 @@ namespace TimeTracker
 			this.commandBus = commandBus;
 			this.messageBox = messageBox;
 			this.localizationService = localizationService;
+			core = new TimeTrackingCore(TimeSpan.Zero,
+				() =>
+				{
+					var date = DateTime.Now.Date;
+					return new TimeTrackingKey(date.ToString(format), date);
+				},
+				OnTimeChanged,
+				OnTimeSaved,
+				OnTrackingStarted,
+				OnTrackingStopped);
 		}
 
-		//private void LoadTime()
-		//{
-		//	var loadedTime = timeService.LoadTime(DateTime.Now);
-		//	if (loadedTime.HasValue)
-		//	{
-		//		time = loadedTime.Value;
-		//	}
-		//	else
-		//	{
-		//		time = new TimeSpan();
-		//	}
+		private void OnTrackingStopped()
+		{
+			IsStarted = false;
+		}
 
-		//	TotalTime = time.ToString();
-		//}
+		private void OnTrackingStarted()
+		{
+			IsStarted = true;
+		}
+
+		private void OnTimeSaved(RegisterTimeCommand command)
+		{
+			TimePublisher.PublishTimeRegistration(commandBus,
+				command,
+				OnTimeRegistrationErrorCallback);
+		}
+
+		private void OnTimeChanged(TimeSpan totalTimeForPeriod)
+		{
+			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
+				TotalTime = string.Format("{0:D2}:{1:D2}:{2:D2}", totalTimeForPeriod.Hours, totalTimeForPeriod.Minutes, totalTimeForPeriod.Seconds)));
+		}
 
 		public override void Cleanup()
 		{
@@ -207,10 +217,7 @@ namespace TimeTracker
 		{
 			LogHelper.Debug(string.Format("Time tracking stopped at {0}", DateTime.Now));
 
-			subscription.MaybeDo(s => s.Dispose());
-			subscription = null;
-			confirmationSubscription.MaybeDo(cs => cs.Dispose());
-			confirmationSubscription = null;
+			core.Stop();
 			IsStarted = false;
 		}
 
@@ -218,91 +225,9 @@ namespace TimeTracker
 		{
 			LogHelper.Debug(string.Format("Time tracking started at {0}", DateTime.Now));
 
-			previousValue = new DateTimeOffset(DateTime.Now);
-			subscription = Observable.Interval(TimeSpan.FromSeconds(1))
-				.Timestamp()
-				.ObserveOnDispatcher()
-				.Subscribe(IncreaseWorkingTime);
-
-			confirmationSubscription = Observable.Interval(TimeSpan.FromSeconds(5))
-				.Timestamp()
-				.ObserveOnDispatcher()
-				.Subscribe(DisplayWorkingTime);
+			core.Start();
 
 			IsStarted = true;
-		}
-
-		private void RestartTrackingTime()
-		{
-			if (IsStarted)
-			{
-				StopTrackingTime();
-			}
-
-			StartTrackingTime();
-		}
-		
-		private void IncreaseWorkingTime(Timestamped<long> msg)
-		{
-			var currentKey = DateTime.Now.Date.ToString(format);
-
-			if (!string.IsNullOrEmpty(previousKey)
-				&& !string.Equals(previousKey, currentKey, StringComparison.OrdinalIgnoreCase))
-			{
-				TimePublisher.PublishTimeRegistration(commandBus,
-					previousKey,
-					DateTime.Now.Date,
-					timeSinceLastUpdate,
-					Memo,
-					OnTimeRegistrationErrorCallback);
-
-				timeSinceLastUpdate = TimeSpan.FromSeconds(0);
-				totalTimeForPeriod = TimeSpan.FromSeconds(0);
-			}
-			else
-			{
-				var workingTime = msg.Timestamp - previousValue;
-				previousValue = msg.Timestamp;
-				timeSinceLastUpdate = timeSinceLastUpdate.Add(workingTime);
-				totalTimeForPeriod = totalTimeForPeriod.Add(workingTime);
-
-				const double secondsToSave = 20;
-				if (timeSinceLastUpdate.TotalSeconds > secondsToSave)
-				{
-					TimePublisher.PublishTimeRegistration(commandBus,
-						currentKey,
-						DateTime.Now.Date,
-						timeSinceLastUpdate,
-						Memo,
-						OnTimeRegistrationErrorCallback);
-
-					timeSinceLastUpdate = TimeSpan.FromSeconds(0);
-				}
-			}
-
-			previousKey = currentKey;
-
-			TotalTime = string.Format("{0:D2}:{1:D2}:{2:D2}", totalTimeForPeriod.Hours, totalTimeForPeriod.Minutes, totalTimeForPeriod.Seconds);
-		}
-
-		private void DisplayWorkingTime(Timestamped<long> msg)
-		{
-			//try
-			//{
-			//	var serverTime = timeService.LoadTime(DateTime.Now);
-
-			//	if (!serverTime.HasValue)
-			//	{
-			//		serverTime = new TimeSpan();
-			//	}
-
-			//	ConfirmedTime = string.Format("{0:D2}:{1:D2}:{2:D2}", serverTime.Value.Hours, serverTime.Value.Minutes, serverTime.Value.Seconds);
-			//	ConfirmedTimeForeground = Brushes.Green;
-			//}
-			//catch (Exception)
-			//{
-			//	ConfirmedTimeForeground = Brushes.Red;
-			//}
 		}
 
 		private bool CanExecuteChangeTask()
@@ -321,8 +246,8 @@ namespace TimeTracker
 			if (result.HasValue && result.Value)
 			{
 				Memo = changeTaskView.ViewModel.Memo;
+				core.ChangeMemo(Memo);
 				ProjectName = changeTaskView.ViewModel.ProjectName;
-				RestartTrackingTime();
 			}
 		}
 

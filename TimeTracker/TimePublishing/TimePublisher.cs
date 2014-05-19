@@ -7,6 +7,7 @@ namespace TimeTracker.TimePublishing
 {
 	public static class TimePublisher
 	{
+		
 		public static void PublishTimeRegistration(ICommandBus commandBus,
 			string timeKey,
 			DateTime date,
@@ -14,17 +15,26 @@ namespace TimeTracker.TimePublishing
 			string memo,
 			Action<Exception> onTimeRegistrationError)
 		{
+			PublishTimeRegistration(commandBus,
+				new RegisterTimeCommand(timeKey, date, duration, memo),
+				onTimeRegistrationError);
+		}
+
+		public static void PublishTimeRegistration(ICommandBus commandBus,
+			RegisterTimeCommand command,
+			Action<Exception> onTimeRegistrationError)
+		{
 			Task.Run(async () =>
+			{
+				try
 				{
-					try
-					{
-						await commandBus.Publish(new RegisterTimeCommand(timeKey, date, duration, memo));
-					}
-					catch (Exception ex)
-					{
-						onTimeRegistrationError(ex);
-					}
-				});
+					await commandBus.Publish(command);
+				}
+				catch (Exception ex)
+				{
+					onTimeRegistrationError(ex);
+				}
+			});
 		}
 	}
 }
