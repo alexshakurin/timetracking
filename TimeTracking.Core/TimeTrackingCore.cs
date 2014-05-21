@@ -7,15 +7,16 @@ namespace TimeTracking.Core
 {
 	public class TimeTrackingCore : ITimeTrackingCore
 	{
+		private readonly object syncRoot = new object();
+
 		private DateTimeOffset previousValue;
+		private TimeSpan totalTime;
+		private TimeSpan timeSinceLastSave;
 
 		private Action trackingStarted;
 		private Action trackingStopped;
 
 		private TimeTrackingKey previousKey;
-
-		private TimeSpan totalTime;
-		private TimeSpan timeSinceLastSave;
 
 		private Func<TimeTrackingKey> keyProvider;
 		private Action<TimeSpan> timeChanged;
@@ -46,33 +47,41 @@ namespace TimeTracking.Core
 			subscription.MaybeDo(s => s.Dispose());
 			subscription = null;
 
-			if (isStarted)
+			lock (syncRoot)
 			{
-				var key = GetCurrentKey();
-				if (key != null && !string.IsNullOrEmpty(key.Key))
+				if (isStarted)
 				{
-					OnTimeSave(new RegisterTimeCommand(key.Key,
-						key.Date,
-						timeSinceLastSave,
-						currentMemo));
-				}
+					var key = GetCurrentKey();
+					if (key != null && !string.IsNullOrEmpty(key.Key))
+					{
+						SaveTimeAndResetNoLock(key, "Saving by stop request");
+					}
 
-				OnTimeTrackingStopped();
-				isStarted = false;
+					isStarted = false;
+					OnTimeTrackingStopped();
+				}
 			}
 		}
 
 		public void Start()
 		{
-			previousValue = new DateTimeOffset(DateTime.Now);
+			lock (syncRoot)
+			{
+				if (isStarted)
+				{
+					return;
+				}
 
-			subscription = Observable.Interval(TimeSpan.FromSeconds(1))
-				.Timestamp()
-				.Select(t => new TrackingData(GetCurrentKey(), t.Timestamp))
-				.Subscribe(IncreaseWorkingTime);
+				previousValue = new DateTimeOffset(DateTime.Now);
 
-			isStarted = true;
-			OnTimeTrackingStarted();
+				subscription = Observable.Interval(TimeSpan.FromSeconds(1))
+					.Timestamp()
+					.Select(t => new TrackingData(GetCurrentKey(), t.Timestamp))
+					.Subscribe(IncreaseWorkingTime);
+
+				isStarted = true;
+				OnTimeTrackingStarted();
+			}
 		}
 
 		public void ChangeMemo(string memo)
@@ -102,45 +111,52 @@ namespace TimeTracking.Core
 				return;
 			}
 
-			if (previousKey != null
+			lock (syncRoot)
+			{
+				if (previousKey != null
 				&& !string.IsNullOrEmpty(previousKey.Key)
 				&& !string.Equals(previousKey.Key, currentKey.Key, StringComparison.OrdinalIgnoreCase))
-			{
-				OnTimeSave(new RegisterTimeCommand(previousKey.Key,
-					previousKey.Date,
-					timeSinceLastSave,
-					currentMemo));
-
-				timeSinceLastSave = TimeSpan.FromSeconds(0);
-				totalTime = TimeSpan.FromSeconds(0);
-			}
-			else
-			{
-				var workingTime = data.Timestamp - previousValue;
-				previousValue = data.Timestamp;
-				timeSinceLastSave = timeSinceLastSave.Add(workingTime);
-				totalTime = totalTime.Add(workingTime);
-
-				const double secondsToSave = 20;
-				if (timeSinceLastSave.TotalSeconds > secondsToSave)
 				{
-					OnTimeSave(new RegisterTimeCommand(currentKey.Key,
-						currentKey.Date,
-						timeSinceLastSave,
-						currentMemo));
+					SaveTimeAndResetNoLock(previousKey, "Saving due to day end");
 
-					timeSinceLastSave = TimeSpan.FromSeconds(0);
+					totalTime = TimeSpan.FromSeconds(0);
 				}
+				else
+				{
+					var workingTime = data.Timestamp - previousValue;
+					previousValue = data.Timestamp;
+					timeSinceLastSave = timeSinceLastSave.Add(workingTime);
+					totalTime = totalTime.Add(workingTime);
+
+#if DEBUG
+					const double secondsToSave = 5;
+#else
+					const double secondsToSave = 20;
+#endif
+					if (timeSinceLastSave.TotalSeconds > secondsToSave)
+					{
+						SaveTimeAndResetNoLock(currentKey, "Saving due to time elapsed");
+					}
+				}
+
+				previousKey = currentKey;
+
+				OnTotalTimeChange(totalTime);
 			}
-
-			previousKey = currentKey;
-
-			OnTotalTimeChange(totalTime);
 		}
 
-		private void OnTimeSave(RegisterTimeCommand command)
+		private void SaveTimeAndResetNoLock(TimeTrackingKey key, string reason)
 		{
-			timeSave.MaybeDo(ts => ts(command));
+			if (timeSinceLastSave.TotalMilliseconds > 0)
+			{
+				var command = new RegisterTimeCommand(key.Key,
+					key.Date,
+					timeSinceLastSave,
+					currentMemo,
+					reason);
+				timeSave.MaybeDo(ts => ts(command));
+				timeSinceLastSave = TimeSpan.Zero;
+			}
 		}
 
 		private TimeTrackingKey GetCurrentKey()

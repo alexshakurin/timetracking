@@ -8,17 +8,17 @@ namespace TimeTracker.TimePublishing
 	public static class TimePublisher
 	{
 		
-		public static void PublishTimeRegistration(ICommandBus commandBus,
-			string timeKey,
-			DateTime date,
-			TimeSpan duration,
-			string memo,
-			Action<Exception> onTimeRegistrationError)
-		{
-			PublishTimeRegistration(commandBus,
-				new RegisterTimeCommand(timeKey, date, duration, memo),
-				onTimeRegistrationError);
-		}
+		//public static void PublishTimeRegistration(ICommandBus commandBus,
+		//	string timeKey,
+		//	DateTime date,
+		//	TimeSpan duration,
+		//	string memo,
+		//	Action<Exception> onTimeRegistrationError)
+		//{
+		//	PublishTimeRegistration(commandBus,
+		//		new RegisterTimeCommand(timeKey, date, duration, memo),
+		//		onTimeRegistrationError);
+		//}
 
 		public static void PublishTimeRegistration(ICommandBus commandBus,
 			RegisterTimeCommand command,
