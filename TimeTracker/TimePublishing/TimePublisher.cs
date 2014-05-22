@@ -8,7 +8,7 @@ namespace TimeTracker.TimePublishing
 {
 	public static class TimePublisher
 	{
-		private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+		private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
 		//public static void PublishTimeRegistration(ICommandBus commandBus,
 		//	string timeKey,
@@ -32,6 +32,7 @@ namespace TimeTracker.TimePublishing
 
 				try
 				{
+					// Allow only one RegisterTimeCommand to be processed at a time
 					await semaphoreSlim.WaitAsync();
 					await commandBus.Publish(command);
 				}

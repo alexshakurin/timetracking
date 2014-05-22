@@ -9,7 +9,6 @@ namespace TimeTracking.Core
 	{
 		private readonly object syncRoot = new object();
 
-		private DateTimeOffset previousValue;
 		private TimeSpan totalTime;
 		private TimeSpan timeSinceLastSave;
 
@@ -72,11 +71,11 @@ namespace TimeTracking.Core
 					return;
 				}
 
-				previousValue = new DateTimeOffset(DateTime.Now);
+				var previousValue = new DateTimeOffset(DateTime.Now).ToLocalTime();
 
 				subscription = Observable.Interval(TimeSpan.FromSeconds(1))
-					.Timestamp()
-					.Select(t => new TrackingData(GetCurrentKey(), t.Timestamp))
+					.TimeInterval()
+					.Select(t => new TrackingData(GetCurrentKey(), previousValue, t.Interval))
 					.Subscribe(IncreaseWorkingTime);
 
 				isStarted = true;
@@ -123,10 +122,8 @@ namespace TimeTracking.Core
 				}
 				else
 				{
-					var workingTime = data.Timestamp - previousValue;
-					previousValue = data.Timestamp;
-					timeSinceLastSave = timeSinceLastSave.Add(workingTime);
-					totalTime = totalTime.Add(workingTime);
+					timeSinceLastSave = timeSinceLastSave.Add(data.Interval);
+					totalTime = totalTime.Add(data.Interval);
 
 #if DEBUG
 					const double secondsToSave = 5;

@@ -6,12 +6,15 @@ namespace TimeTracking.Core
 	{
 		public TimeTrackingKey Key { get; private set; }
 
-		public DateTimeOffset Timestamp { get; private set; }
+		public DateTimeOffset Start { get; private set; }
 
-		public TrackingData(TimeTrackingKey key, DateTimeOffset timestamp)
+		public TimeSpan Interval { get; private set; }
+
+		public TrackingData(TimeTrackingKey key, DateTimeOffset start, TimeSpan interval)
 		{
 			Key = key;
-			Timestamp = timestamp;
-		} 
+			Start = start;
+			Interval = interval;
+		}
 	}
 }
