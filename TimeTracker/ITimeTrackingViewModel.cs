@@ -1,8 +1,9 @@
 ﻿using System.Windows.Input;
+using GalaSoft.MvvmLight;
 
 namespace TimeTracker
 {
-	public interface ITimeTrackingViewModel
+	public interface ITimeTrackingViewModel : ICleanup
 	{
 		ICommand ChangeTask { get; }
 

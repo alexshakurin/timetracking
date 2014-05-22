@@ -61,6 +61,7 @@ namespace TimeTracker
 			base.Cleanup();
 
 			TimeTrackingViewModel.MaybeDo(ttvm => ttvm.Stop());
+			TimeTrackingViewModel.MaybeDo(ttvm => ttvm.Cleanup());
 		}
 
 		private void SessionSwitch(object sender, SessionSwitchEventArgs e)

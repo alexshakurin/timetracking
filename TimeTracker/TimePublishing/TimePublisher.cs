@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using TimeTracking.Commands;
 using TimeTracking.Infrastructure;
@@ -7,7 +8,8 @@ namespace TimeTracker.TimePublishing
 {
 	public static class TimePublisher
 	{
-		
+		private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+
 		//public static void PublishTimeRegistration(ICommandBus commandBus,
 		//	string timeKey,
 		//	DateTime date,
@@ -26,13 +28,25 @@ namespace TimeTracker.TimePublishing
 		{
 			Task.Run(async () =>
 			{
+				Exception error = null;
+
 				try
 				{
+					await semaphoreSlim.WaitAsync();
 					await commandBus.Publish(command);
 				}
 				catch (Exception ex)
 				{
-					onTimeRegistrationError(ex);
+					error = ex;
+				}
+				finally
+				{
+					semaphoreSlim.Release();
+				}
+
+				if (error != null)
+				{
+					onTimeRegistrationError(error);
 				}
 			});
 		}
