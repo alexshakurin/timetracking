@@ -7,7 +7,10 @@ namespace TimeTracking.Model
 {
 	public class WorkingTime : EventSourced
 	{
-		public TimeSpan TotalTime { get; private set; }
+		public DateTimeOffset Start { get; private set; }
+		public DateTimeOffset End { get; private set; }
+
+		public TimeSpan Total { get; private set; }
 
 		public WorkingTime(string id)
 			: base(id)
@@ -21,19 +24,21 @@ namespace TimeTracking.Model
 			LoadFrom(history.ToList().AsReadOnly());
 		}
 
-		public void RegisterTime(DateTime date, TimeSpan time, string memo)
+		public void RegisterTime(DateTime date, DateTimeOffset start, DateTimeOffset end, string memo)
 		{
-			if (TotalTime.TotalSeconds == 0 && time.TotalSeconds < 0)
+			var time = end - start;
+			if (Total.TotalSeconds == 0 && time.TotalSeconds < 0)
 			{
-				throw new ArgumentOutOfRangeException("time", "Can't add negative time because working time is zero");
+				throw new ArgumentException("Can't add negative time because working time is zero");
 			}
 
-			Update(new WorkingTimeRegistered(date, time, memo));
+			Update(new WorkingTimeRegistered(date, start, end, memo));
 		}
 
 		private void OnWorkingTimeRegistered(WorkingTimeRegistered @event)
 		{
-			TotalTime += @event.Time;
+			var time = @event.End - @event.Start;
+			Total += time;
 		}
 	}
 }

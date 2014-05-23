@@ -12,20 +12,23 @@ namespace TimeTracking.Commands
 
 		public DateTime Date { get; private set; }
 
-		public TimeSpan Time { get; private set; }
+		public DateTimeOffset Start { get; private set; }
+		public DateTimeOffset End { get; private set; }
 
 		public string Memo { get; private set; }
 
 		public RegisterTimeCommand(string workingTimeId,
 			DateTime date,
-			TimeSpan time,
+			DateTimeOffset start,
+			DateTimeOffset end,
 			string memo,
 			string reason = null)
 		{
 			WorkingTimeId = workingTimeId;
 			CommandId = Guid.NewGuid();
 			Date = date;
-			Time = time;
+			Start = start;
+			End = end;
 			Memo = memo;
 			this.reason = reason;
 		}
@@ -34,7 +37,7 @@ namespace TimeTracking.Commands
 		{
 			return string.Format("Id '{0}': {1} for '{2}' with memo '{3}'{4}",
 				WorkingTimeId,
-				Time,
+				string.Format("'{0} - {1}'", Start.TimeOfDay, End.TimeOfDay),
 				Date.ToShortDateString(),
 				Memo,
 				string.IsNullOrEmpty(reason)

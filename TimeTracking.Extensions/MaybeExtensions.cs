@@ -4,6 +4,18 @@ namespace TimeTracking.Extensions
 {
 	public static class MaybeExtensions
 	{
+		public static TResult Maybe<TInput, TResult>(this TInput input,
+			Func<TInput, TResult> func,
+			TResult ifDefault)
+		{
+			if (Equals(input, default(TInput)))
+			{
+				return ifDefault;
+			}
+
+			return func(input);
+		}
+
 		public static TResult Maybe<TInput, TResult>(this TInput input, Func<TInput, TResult> func)
 		{
 			if (Equals(input, default(TInput)))

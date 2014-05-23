@@ -13,5 +13,26 @@ namespace TimeTracking.Core
 			Key = key;
 			Date = date;
 		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(this, obj))
+			{
+				return true;
+			}
+
+			var that = obj as TimeTrackingKey;
+			if (that == null)
+			{
+				return false;
+			}
+
+			return string.Equals(Key, that.Key, StringComparison.OrdinalIgnoreCase);
+		}
+
+		public override int GetHashCode()
+		{
+			return Key.GetHashCode();
+		}
 	}
 }

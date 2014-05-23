@@ -10,20 +10,19 @@ namespace TimeTracking.Model.Events
 		public DateTime Date { get; private set; }
 
 		[DataMember]
-		public TimeSpan Time { get; private set; }
+		public DateTimeOffset Start { get; private set; }
+
+		[DataMember]
+		public DateTimeOffset End { get; private set; }
 
 		[DataMember]
 		public string Memo { get; private set; }
 
-		public WorkingTimeRegistered(DateTime date, TimeSpan time, string memo)
+		public WorkingTimeRegistered(DateTime date, DateTimeOffset start, DateTimeOffset end, string memo)
 		{
-			if (time.TotalSeconds == 0)
-			{
-				throw new ArgumentException("Total time cannot be zero", "time");
-			}
-
 			Date = date.Date;
-			Time = time;
+			Start = start;
+			End = end;
 			Memo = memo;
 		}
 	}

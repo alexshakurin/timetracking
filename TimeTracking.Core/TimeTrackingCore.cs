@@ -9,13 +9,11 @@ namespace TimeTracking.Core
 	{
 		private readonly object syncRoot = new object();
 
-		private TimeSpan totalTime;
-		private TimeSpan timeSinceLastSave;
+		private readonly TimeTrackingBus trackingBus;
 
 		private Action trackingStarted;
 		private Action trackingStopped;
 
-		private TimeTrackingKey previousKey;
 
 		private Func<TimeTrackingKey> keyProvider;
 		private Action<TimeSpan> timeChanged;
@@ -33,12 +31,15 @@ namespace TimeTracking.Core
 			Action trackingStarted,
 			Action trackingStopped)
 		{
-			totalTime = baseTime;
 			this.timeChanged = timeChanged;
 			this.timeSave = timeSave;
 			this.keyProvider = keyProvider;
 			this.trackingStarted = trackingStarted;
 			this.trackingStopped = trackingStopped;
+
+			trackingBus = new TimeTrackingBus(baseTime,
+				OnTotalTimeChange,
+				SaveTimeAndResetNoLock);
 		}
 
 		public void Stop()
@@ -53,7 +54,8 @@ namespace TimeTracking.Core
 					var key = GetCurrentKey();
 					if (key != null && !string.IsNullOrEmpty(key.Key))
 					{
-						SaveTimeAndResetNoLock(key, "Saving by stop request");
+						trackingBus.EnqueueStop(GetCurrentKey(),
+							new DateTimeOffset(DateTime.Now).ToLocalTime());
 					}
 
 					isStarted = false;
@@ -71,15 +73,23 @@ namespace TimeTracking.Core
 					return;
 				}
 
-				var previousValue = new DateTimeOffset(DateTime.Now).ToLocalTime();
+				var startTime = new DateTimeOffset(DateTime.Now).ToLocalTime();
 
-				subscription = Observable.Interval(TimeSpan.FromSeconds(1))
-					.TimeInterval()
-					.Select(t => new TrackingData(GetCurrentKey(), previousValue, t.Interval))
-					.Subscribe(IncreaseWorkingTime);
+				var key = GetCurrentKey();
+				if (key != null && !string.IsNullOrEmpty(key.Key))
+				{
+					trackingBus.EnqueueStart(key, startTime);
 
-				isStarted = true;
-				OnTimeTrackingStarted();
+					subscription = Observable.Interval(TimeSpan.FromSeconds(1))
+						.Timestamp()
+						.Select(t => new { Key = GetCurrentKey(), t.Timestamp})
+						.Where(t => t.Key != null && !string.IsNullOrEmpty(t.Key.Key))
+						.Subscribe(t => IncreaseWorkingTime(t.Key, t.Timestamp));
+
+					isStarted = true;
+					OnTimeTrackingStarted();
+				}
+				
 			}
 		}
 
@@ -101,58 +111,31 @@ namespace TimeTracking.Core
 			trackingStopped = null;
 		}
 
-		private void IncreaseWorkingTime(TrackingData data)
+		private void IncreaseWorkingTime(TimeTrackingKey key, DateTimeOffset currentTime)
 		{
-			var currentKey = data.Key;
-
-			if (string.IsNullOrEmpty(currentKey.Key))
+			if (key == null || string.IsNullOrEmpty(key.Key))
 			{
 				return;
 			}
 
-			lock (syncRoot)
-			{
-				if (previousKey != null
-				&& !string.IsNullOrEmpty(previousKey.Key)
-				&& !string.Equals(previousKey.Key, currentKey.Key, StringComparison.OrdinalIgnoreCase))
-				{
-					SaveTimeAndResetNoLock(previousKey, "Saving due to day end");
-
-					totalTime = TimeSpan.FromSeconds(0);
-				}
-				else
-				{
-					timeSinceLastSave = timeSinceLastSave.Add(data.Interval);
-					totalTime = totalTime.Add(data.Interval);
-
-#if DEBUG
-					const double secondsToSave = 5;
-#else
-					const double secondsToSave = 20;
-#endif
-					if (timeSinceLastSave.TotalSeconds > secondsToSave)
-					{
-						SaveTimeAndResetNoLock(currentKey, "Saving due to time elapsed");
-					}
-				}
-
-				previousKey = currentKey;
-
-				OnTotalTimeChange(totalTime);
-			}
+			trackingBus.EnqueuePeriodData(key, currentTime);
 		}
 
-		private void SaveTimeAndResetNoLock(TimeTrackingKey key, string reason)
+		private void SaveTimeAndResetNoLock(TimeTrackingKey key,
+			DateTimeOffset start,
+			DateTimeOffset end,
+			string reason)
 		{
+			var timeSinceLastSave = end - start;
 			if (timeSinceLastSave.TotalMilliseconds > 0)
 			{
 				var command = new RegisterTimeCommand(key.Key,
 					key.Date,
-					timeSinceLastSave,
+					start,
+					end,
 					currentMemo,
 					reason);
 				timeSave.MaybeDo(ts => ts(command));
-				timeSinceLastSave = TimeSpan.Zero;
 			}
 		}
 
