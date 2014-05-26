@@ -60,6 +60,7 @@
     <Compile Include="IEventBus.cs" />
     <Compile Include="IEventSourcedRepository.cs" />
     <Compile Include="Impl\EventBus.cs" />
+    <Compile Include="Impl\EventDispatcher.cs" />
     <Compile Include="Impl\SqlEventSourcedRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Impl\SynchronousCommandBus.cs" />
@@ -75,13 +76,13 @@
       <Project>{03b2debd-2994-499f-bca5-c1e49eff9c2a}</Project>
       <Name>TimeTracking.EventHandlers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TimeTracking.Events\TimeTracking.Events.csproj">
-      <Project>{406f5fb7-33a1-42c5-b111-218fbae6e0bd}</Project>
-      <Name>TimeTracking.Events</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TimeTracking.LocalStorage\TimeTracking.LocalStorage.csproj">
       <Project>{012b1cbb-b499-480d-8c3c-15ee43743f2a}</Project>
       <Name>TimeTracking.LocalStorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTracking.Logging\TimeTracking.Logging.csproj">
+      <Project>{8c15d30d-92b2-4d63-a51c-a401bd823f7e}</Project>
+      <Name>TimeTracking.Logging</Name>
     </ProjectReference>
     <ProjectReference Include="..\TimeTracking.Model\TimeTracking.Model.csproj">
       <Project>{1bd06df3-22a6-4f01-83eb-d468ac039c76}</Project>

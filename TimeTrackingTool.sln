@@ -9,11 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.Export", "Time
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.Infrastructure", "TimeTracking.Infrastructure\TimeTracking.Infrastructure.csproj", "{91FC79E7-0A4F-42E1-94EC-1474A81EFDC4}"
 	ProjectSection(ProjectDependencies) = postProject
-		{406F5FB7-33A1-42C5-B111-218FBAE6E0BD} = {406F5FB7-33A1-42C5-B111-218FBAE6E0BD}
 		{03B2DEBD-2994-499F-BCA5-C1E49EFF9C2A} = {03B2DEBD-2994-499F-BCA5-C1E49EFF9C2A}
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.Events", "TimeTracking.Events\TimeTracking.Events.csproj", "{406F5FB7-33A1-42C5-B111-218FBAE6E0BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.EventHandlers", "TimeTracking.EventHandlers\TimeTracking.EventHandlers.csproj", "{03B2DEBD-2994-499F-BCA5-C1E49EFF9C2A}"
 EndProject
@@ -42,6 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{041B6A46
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.Core.Tests.Unit", "TimeTracking.Core.Tests.Unit\TimeTracking.Core.Tests.Unit.csproj", "{B7FF62EE-EFD2-4B7D-BB7C-2F40154EFDF0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.ReadModel", "TimeTracking.ReadModel\TimeTracking.ReadModel.csproj", "{4653B13D-81D0-4142-AAE9-C534FED70F30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,10 +59,6 @@ Global
 		{91FC79E7-0A4F-42E1-94EC-1474A81EFDC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91FC79E7-0A4F-42E1-94EC-1474A81EFDC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91FC79E7-0A4F-42E1-94EC-1474A81EFDC4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{406F5FB7-33A1-42C5-B111-218FBAE6E0BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{406F5FB7-33A1-42C5-B111-218FBAE6E0BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{406F5FB7-33A1-42C5-B111-218FBAE6E0BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{406F5FB7-33A1-42C5-B111-218FBAE6E0BD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{03B2DEBD-2994-499F-BCA5-C1E49EFF9C2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{03B2DEBD-2994-499F-BCA5-C1E49EFF9C2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03B2DEBD-2994-499F-BCA5-C1E49EFF9C2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -104,6 +99,10 @@ Global
 		{B7FF62EE-EFD2-4B7D-BB7C-2F40154EFDF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7FF62EE-EFD2-4B7D-BB7C-2F40154EFDF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7FF62EE-EFD2-4B7D-BB7C-2F40154EFDF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4653B13D-81D0-4142-AAE9-C534FED70F30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4653B13D-81D0-4142-AAE9-C534FED70F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4653B13D-81D0-4142-AAE9-C534FED70F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4653B13D-81D0-4142-AAE9-C534FED70F30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

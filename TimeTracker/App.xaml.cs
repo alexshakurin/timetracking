@@ -8,6 +8,7 @@ using TimeTracker.Views.ChangeTask;
 using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.CommandHandlers;
 using TimeTracking.Commands;
+using TimeTracking.EventHandlers;
 using TimeTracking.Export;
 using TimeTracking.Infrastructure;
 using TimeTracking.Infrastructure.CommandHandlers;
@@ -15,6 +16,8 @@ using TimeTracking.Infrastructure.Impl;
 using TimeTracking.Infrastructure.Serialization;
 using TimeTracking.LocalStorage;
 using TimeTracking.Logging;
+using TimeTracking.Model.Events;
+using TimeTracking.ReadModel;
 
 namespace TimeTracker
 {
@@ -39,6 +42,11 @@ namespace TimeTracker
 
 			base.OnStartup(e);
 			container = new UnityContainer();
+
+			var eventDispather = new EventDispatcher();
+			eventDispather.Register<WorkingTimeRegistered>();
+			container.RegisterInstance(eventDispather);
+			container.RegisterType<IEventHandler<WorkingTimeRegistered>, WorkingTimeRegisteredEventHandler>();
 			container.RegisterType<ILocalizationService, LocalizationService>();
 			container.RegisterType<IMessageBoxService, MessageBoxService>();
 			container.RegisterType<ITimeTrackingViewModel, TimeTrackingViewModel>();
@@ -51,8 +59,12 @@ namespace TimeTracker
 			container.RegisterInstance<ITextSerializer>(new JsonTextSerializer());
 
 			container.RegisterType<ICommandHandler<RegisterTimeCommand>, RegisterTimeCommandHandler>();
-			container.RegisterType<EventStoreDbContext>(new TransientLifetimeManager(), new InjectionConstructor("EventStore"));
-			container.RegisterType(typeof(IEventSourcedRepository<>), typeof(SqlEventSourcedRepository<>), new ContainerControlledLifetimeManager());
+			container.RegisterType<EventStoreDbContext>(new TransientLifetimeManager(),
+				new InjectionConstructor("EventStore"));
+			container.RegisterType(typeof(IEventSourcedRepository<>),
+				typeof(SqlEventSourcedRepository<>),
+				new ContainerControlledLifetimeManager());
+			container.RegisterType<ReadModelRepository>();
 
 			container.RegisterType<IChangeTaskView, ChangeTaskView>();
 

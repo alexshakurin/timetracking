@@ -12,12 +12,16 @@ namespace TimeTracking.Infrastructure.Impl
 	{
 		private static readonly string sourceType = typeof(T).Name;
 		private readonly ITextSerializer serializer;
+		private readonly IEventBus eventBus;
 		private readonly Func<EventStoreDbContext> contextFactory;
 		private readonly Func<string, IEnumerable<IVersionedEvent>, T> entityFactory;
 
-		public SqlEventSourcedRepository(ITextSerializer serializer,
+		// Unity container automatically resolves Func<T> to Resolve<T>
+		public SqlEventSourcedRepository(IEventBus eventBus,
+			ITextSerializer serializer,
 			Func<EventStoreDbContext> contextFactory)
 		{
+			this.eventBus = eventBus;
 			this.serializer = serializer;
 			this.contextFactory = contextFactory;
 
@@ -63,6 +67,8 @@ namespace TimeTracking.Infrastructure.Impl
 
 				context.SaveChanges();
 			}
+
+			eventBus.Publish(events.ToList().AsReadOnly());
 		}
 
 		private StoredEvent Serialize(IVersionedEvent e, string correlationId)

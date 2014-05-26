@@ -1,24 +1,45 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Win32;
 using TimeTracker.Localization;
+using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.Extensions;
+using TimeTracking.Infrastructure;
 using TimeTracking.Logging;
+using TimeTracking.ReadModel;
 
 namespace TimeTracker
 {
 	public class MainViewModel : ViewModelBase
 	{
 		private readonly ILocalizationService localizationService;
+		private readonly IMessageBoxService messageBox;
+		private readonly ICommandBus commandBus;
 
 		private ICommand startStopCommand;
 
 		private bool isPaused;
 
-		public ITimeTrackingViewModel TimeTrackingViewModel { get; private set; }
+		private ITimeTrackingViewModel timeTrackingViewModel;
+
+		public ITimeTrackingViewModel TimeTrackingViewModel
+		{
+			get { return timeTrackingViewModel; }
+			set
+			{
+				if (timeTrackingViewModel == value)
+				{
+					return;
+				}
+
+				timeTrackingViewModel = value;
+				RaisePropertyChanged(() => TimeTrackingViewModel);
+			}
+		}
 
 		public string ActionHeader
 		{
@@ -36,21 +57,28 @@ namespace TimeTracker
 			{
 				if (startStopCommand == null)
 				{
-					startStopCommand = new RelayCommand(StartOrStop);
+					startStopCommand = new RelayCommand(StartOrStop, CanStartOrStop);
 				}
 
 				return startStopCommand;
 			}
 		}
-		
+
+		private bool CanStartOrStop()
+		{
+			return TimeTrackingViewModel != null;
+		}
+
 		public MainViewModel()
 		{
 			localizationService = ServiceLocator.Current.GetInstance<ILocalizationService>();
-
-			TimeTrackingViewModel = ServiceLocator.Current.GetInstance<ITimeTrackingViewModel>();
+			messageBox = ServiceLocator.Current.GetInstance<IMessageBoxService>();
+			commandBus = ServiceLocator.Current.GetInstance<ICommandBus>();
 
 			SystemEvents.PowerModeChanged += PowerModeChanged;
 			SystemEvents.SessionSwitch += SessionSwitch;
+
+			StartLoading();
 		}
 
 		public override void Cleanup()
@@ -64,10 +92,29 @@ namespace TimeTracker
 			TimeTrackingViewModel.MaybeDo(ttvm => ttvm.Cleanup());
 		}
 
+		private async void StartLoading()
+		{
+			var baseTime = await Task.Run(() =>
+				{
+					var currentKey = TimeTracker.TimeTrackingViewModel.GetCurrentKey();
+					var repository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
+					return repository.GetDurationForDay(currentKey.Key);
+				});
+
+			var vm = new TimeTrackingViewModel(baseTime,
+				commandBus,
+				messageBox,
+				localizationService);
+
+			TimeTrackingViewModel = vm;
+
+			CommandManager.InvalidateRequerySuggested();
+		}
+
 		private void SessionSwitch(object sender, SessionSwitchEventArgs e)
 		{
 			if (e.Reason.In(new[] {SessionSwitchReason.SessionLock, SessionSwitchReason.SessionLogoff})
-				&& TimeTrackingViewModel.IsStarted)
+				&& TimeTrackingViewModel.Maybe(t => t.IsStarted))
 			{
 				LogHelper.Debug(string.Format("Pausing time tracking at {0} by {1}",
 					DateTime.Now,
@@ -85,7 +132,7 @@ namespace TimeTracker
 
 		private void PowerModeChanged(object sender, PowerModeChangedEventArgs e)
 		{
-			if (e.Mode == PowerModes.Suspend && TimeTrackingViewModel.IsStarted)
+			if (e.Mode == PowerModes.Suspend && TimeTrackingViewModel.Maybe(t => t.IsStarted))
 			{
 				LogHelper.Debug(string.Format("Pausing time tracking at {0} by system suspend", DateTime.Now));
 
@@ -101,22 +148,31 @@ namespace TimeTracker
 
 		private void ResumeTracking()
 		{
-			TimeTrackingViewModel.Start();
-			isPaused = false;
+			TimeTrackingViewModel.MaybeDo(t =>
+				{
+					t.Start();
+					isPaused = false;
+				});
 		}
 
 		private void PauseTracking()
 		{
-			TimeTrackingViewModel.Stop();
-			isPaused = true;
+			TimeTrackingViewModel.MaybeDo(t =>
+				{
+					t.Stop();
+					isPaused = true;
+				});
 		}
 
 		private void StartOrStop()
 		{
 			LogHelper.Debug(string.Format("Change tracking state by user request at {0}", DateTime.Now));
 
-			TimeTrackingViewModel.StartOrStop();
-			RaisePropertyChanged(() => ActionHeader);
+			TimeTrackingViewModel.MaybeDo(t =>
+				{
+					t.StartOrStop();
+					RaisePropertyChanged(() => ActionHeader);
+				});
 		}
 	}
 }

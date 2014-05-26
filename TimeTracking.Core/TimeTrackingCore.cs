@@ -102,9 +102,9 @@ namespace TimeTracking.Core
 
 		public void Dispose()
 		{
-			subscription.Dispose();
+			subscription.MaybeDo(s => s.Dispose());
 
-			trackingBus.Dispose();
+			trackingBus.MaybeDo(tb => tb.Dispose());
 			keyProvider = null;
 			timeChanged = null;
 			timeSave = null;

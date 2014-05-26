@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TimeTracking.Events")]
+[assembly: AssemblyTitle("TimeTracking.ReadModel")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Hewlett-Packard")]
-[assembly: AssemblyProduct("TimeTracking.Events")]
+[assembly: AssemblyProduct("TimeTracking.ReadModel")]
 [assembly: AssemblyCopyright("Copyright © Hewlett-Packard 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("955229ec-2d2e-4306-852f-664170d0b653")]
+[assembly: Guid("26dc617f-a7cc-4dfb-8c3c-300ecfa6abbc")]
 
 // Version information for an assembly consists of the following four values:
 //

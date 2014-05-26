@@ -42,16 +42,20 @@
   <ItemGroup>
     <Compile Include="IEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TimeRecordedEventHandler.cs" />
+    <Compile Include="WorkingTimeRegisteredEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TimeTracking.Events\TimeTracking.Events.csproj">
-      <Project>{406f5fb7-33a1-42c5-b111-218fbae6e0bd}</Project>
-      <Name>TimeTracking.Events</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TimeTracking.Export\TimeTracking.Export.csproj">
       <Project>{55f58786-abf6-4a8e-94c0-32a3c00ff114}</Project>
       <Name>TimeTracking.Export</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTracking.Model\TimeTracking.Model.csproj">
+      <Project>{1bd06df3-22a6-4f01-83eb-d468ac039c76}</Project>
+      <Name>TimeTracking.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTracking.ReadModel\TimeTracking.ReadModel.csproj">
+      <Project>{4653b13d-81d0-4142-aae9-c534fed70f30}</Project>
+      <Name>TimeTracking.ReadModel</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

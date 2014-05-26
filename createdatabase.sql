@@ -1,8 +1,8 @@
 ﻿create table timetracking
 (
-	id integer primary key autoincrement,
 	date text not null,
-	seconds integer not null
+	seconds integer not null,
+	primary key(date)
 )
 
 create table storedevents

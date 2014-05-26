@@ -1,9 +1,10 @@
-﻿using TimeTracking.Events;
+﻿using System.Collections.Generic;
+using TimeTracking.Model;
 
 namespace TimeTracking.Infrastructure
 {
 	public interface IEventBus
 	{
-		void Publish<TEvent>(TEvent @event) where TEvent : IEvent;
+		void Publish(IReadOnlyCollection<IVersionedEvent> @events);
 	}
 }

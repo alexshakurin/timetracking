@@ -4,8 +4,6 @@ namespace TimeTracking.LocalStorage
 {
 	public class EventStoreDbContext : DbContext
 	{
-		//public const string SchemaName = "Events";
-
 		public EventStoreDbContext(string nameOrConnectionString)
 			: base(nameOrConnectionString)
 		{
@@ -17,6 +15,8 @@ namespace TimeTracking.LocalStorage
 
 			modelBuilder.Entity<StoredEvent>().HasKey(x => new {x.AggregateId, x.AggregateType, x.Version})
 				.ToTable("storedevents");
+			modelBuilder.Entity<TimeTrackingStatistics>().HasKey(x => x.Date)
+				.ToTable("timetracking");
 		}
 	}
 }

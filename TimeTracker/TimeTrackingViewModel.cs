@@ -3,7 +3,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
-using MahApps.Metro;
 using Microsoft.Practices.ServiceLocation;
 using TimeTracker.Localization;
 using TimeTracker.TimePublishing;
@@ -140,23 +139,27 @@ namespace TimeTracker
 			}
 		}
 
-		public TimeTrackingViewModel(ICommandBus commandBus,
+		public TimeTrackingViewModel(TimeSpan baseTime,
+			ICommandBus commandBus,
 			IMessageBoxService messageBox,
 			ILocalizationService localizationService)
 		{
+			UpdateTotalTime(baseTime);
 			this.commandBus = commandBus;
 			this.messageBox = messageBox;
 			this.localizationService = localizationService;
-			core = new TimeTrackingCore(TimeSpan.Zero,
-				() =>
-				{
-					var date = DateTime.Now.Date;
-					return new TimeTrackingKey(date.ToString(format), date);
-				},
+			core = new TimeTrackingCore(baseTime,
+				GetCurrentKey,
 				OnTimeChanged,
 				OnTimeSaved,
 				OnTrackingStarted,
 				OnTrackingStopped);
+		}
+
+		public static TimeTrackingKey GetCurrentKey()
+		{
+			var date = DateTime.Now.Date;
+			return new TimeTrackingKey(date.ToString(format), date);
 		}
 
 		private void OnTrackingStopped()
@@ -178,8 +181,15 @@ namespace TimeTracker
 
 		private void OnTimeChanged(TimeSpan totalTimeForPeriod)
 		{
-			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
-				TotalTime = string.Format("{0:D2}:{1:D2}:{2:D2}", totalTimeForPeriod.Hours, totalTimeForPeriod.Minutes, totalTimeForPeriod.Seconds)));
+			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() => UpdateTotalTime(totalTimeForPeriod)));
+		}
+
+		private void UpdateTotalTime(TimeSpan totalTimeForPeriod)
+		{
+			TotalTime = string.Format("{0:D2}:{1:D2}:{2:D2}",
+				totalTimeForPeriod.Hours,
+				totalTimeForPeriod.Minutes,
+				totalTimeForPeriod.Seconds);
 		}
 
 		public override void Cleanup()
