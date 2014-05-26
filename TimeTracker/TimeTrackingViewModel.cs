@@ -186,6 +186,7 @@ namespace TimeTracker
 		{
 			base.Cleanup();
 			StopTrackingTime();
+			core.Dispose();
 		}
 
 		public void Stop()

@@ -104,6 +104,7 @@ namespace TimeTracking.Core
 		{
 			subscription.Dispose();
 
+			trackingBus.Dispose();
 			keyProvider = null;
 			timeChanged = null;
 			timeSave = null;
@@ -118,7 +119,7 @@ namespace TimeTracking.Core
 				return;
 			}
 
-			trackingBus.EnqueuePeriodData(key, currentTime);
+			trackingBus.EnqueuePeriodData(key, currentTime.ToLocalTime());
 		}
 
 		private void SaveTimeAndResetNoLock(TimeTrackingKey key,
@@ -131,8 +132,8 @@ namespace TimeTracking.Core
 			{
 				var command = new RegisterTimeCommand(key.Key,
 					key.Date,
-					start,
-					end,
+					start.ToLocalTime(),
+					end.ToLocalTime(),
 					currentMemo,
 					reason);
 				timeSave.MaybeDo(ts => ts(command));

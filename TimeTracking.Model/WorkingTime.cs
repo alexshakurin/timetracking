@@ -7,9 +7,6 @@ namespace TimeTracking.Model
 {
 	public class WorkingTime : EventSourced
 	{
-		public DateTimeOffset Start { get; private set; }
-		public DateTimeOffset End { get; private set; }
-
 		public TimeSpan Total { get; private set; }
 
 		public WorkingTime(string id)
