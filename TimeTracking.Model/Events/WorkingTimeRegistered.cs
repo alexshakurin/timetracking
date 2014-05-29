@@ -25,5 +25,14 @@ namespace TimeTracking.Model.Events
 			End = end;
 			Memo = memo;
 		}
+
+		public override string ToString()
+		{
+			return string.Format("WorkingTimeRegistered: Date '{0}', '{1} - {2}', memo '{3}'",
+				Date.ToString("yyyy_MM_dd"),
+				Start,
+				End,
+				Memo);
+		}
 	}
 }

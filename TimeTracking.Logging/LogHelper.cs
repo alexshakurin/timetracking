@@ -1,5 +1,5 @@
-﻿using System;
-using System.Deployment.Application;
+﻿using System.Deployment.Application;
+using System.IO;
 using log4net;
 
 namespace TimeTracking.Logging
@@ -35,7 +35,12 @@ namespace TimeTracking.Logging
 
 		public static void Error(string error)
 		{
-			logger.Error(error);
+			if (logger != null)
+			{
+				logger.Error(error);
+			}
+
+			File.WriteAllText("fatal.log", error);
 		}
 	}
 }

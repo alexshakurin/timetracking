@@ -19,7 +19,8 @@ namespace TimeTracking.Core
 		{
 			this.totalTime = totalTime;
 			collection = new BlockingCollection<TimePeriodProcessingUnit>();
-			processingTask = Task.Run(new Action(ProcessCollection));
+			processingTask = Task.Factory.StartNew(ProcessCollection,
+				TaskCreationOptions.LongRunning);
 			this.timeChange = timeChange;
 			this.save = save;
 		}
@@ -53,6 +54,7 @@ namespace TimeTracking.Core
 		private void ProcessCollection()
 		{
 			TrackingData currentData = null;
+			var counter = 0;
 			foreach (var nextUnit in collection.GetConsumingEnumerable())
 			{
 				var localCurrendData = currentData;
@@ -60,7 +62,13 @@ namespace TimeTracking.Core
 				currentData = ProcessTimeData(localCurrendData, localNextUnit);
 
 				totalTime = totalTime.Add(currentData.Maybe(cd => cd.Elapsed, TimeSpan.Zero));
-				timeChange.MaybeDo(tc => tc(totalTime));
+
+				counter++;
+				if (counter == 5)
+				{
+					timeChange.MaybeDo(tc => tc(totalTime));
+					counter = 0;
+				}
 			}
 		}
 

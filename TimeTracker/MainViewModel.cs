@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using TimeTracker.Localization;
 using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.Extensions;
+using TimeTracking.Extensions.Exceptions;
 using TimeTracking.Infrastructure;
 using TimeTracking.Logging;
 using TimeTracking.ReadModel;
@@ -94,21 +95,28 @@ namespace TimeTracker
 
 		private async void StartLoading()
 		{
-			var baseTime = await Task.Run(() =>
+			try
+			{
+				var baseTime = await Task.Run(() =>
 				{
 					var currentKey = TimeTracker.TimeTrackingViewModel.GetCurrentKey();
 					var repository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
 					return repository.GetDurationForDay(currentKey.Key);
 				});
 
-			var vm = new TimeTrackingViewModel(baseTime,
-				commandBus,
-				messageBox,
-				localizationService);
+				var vm = new TimeTrackingViewModel(baseTime,
+					commandBus,
+					messageBox,
+					localizationService);
 
-			TimeTrackingViewModel = vm;
+				TimeTrackingViewModel = vm;
 
-			CommandManager.InvalidateRequerySuggested();
+				CommandManager.InvalidateRequerySuggested();
+			}
+			catch (Exception ex)
+			{
+				throw new UnrecoverableApplicationException(ex.Message, ex);
+			}
 		}
 
 		private void SessionSwitch(object sender, SessionSwitchEventArgs e)

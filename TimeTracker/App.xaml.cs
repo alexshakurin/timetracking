@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
@@ -10,6 +12,7 @@ using TimeTracking.CommandHandlers;
 using TimeTracking.Commands;
 using TimeTracking.EventHandlers;
 using TimeTracking.Export;
+using TimeTracking.Extensions;
 using TimeTracking.Infrastructure;
 using TimeTracking.Infrastructure.CommandHandlers;
 using TimeTracking.Infrastructure.Impl;
@@ -33,6 +36,12 @@ namespace TimeTracker
 			DispatcherHelper.Initialize();
 		}
 
+		public App()
+		{
+			DispatcherUnhandledException += OnDispatcherUnhandledException;
+			AppDomain.CurrentDomain.UnhandledException += OnDomainUnhandledException;
+		}
+
 		protected override void OnStartup(StartupEventArgs e)
 		{
 			//System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("de");
@@ -45,8 +54,11 @@ namespace TimeTracker
 
 			var eventDispather = new EventDispatcher();
 			eventDispather.Register<WorkingTimeRegistered>();
+
 			container.RegisterInstance(eventDispather);
-			container.RegisterType<IEventHandler<WorkingTimeRegistered>, WorkingTimeRegisteredEventHandler>();
+			container.RegisterType<IEventHandler<WorkingTimeRegistered>, WorkingTimeRegisteredEventHandler>("readModelHandler");
+			container.RegisterType<IEventHandler<WorkingTimeRegistered>, WorkingTimeRegisteredFileWriterHandler>("fileSystemHandler");
+
 			container.RegisterType<ILocalizationService, LocalizationService>();
 			container.RegisterType<IMessageBoxService, MessageBoxService>();
 			container.RegisterType<ITimeTrackingViewModel, TimeTrackingViewModel>();
@@ -70,5 +82,56 @@ namespace TimeTracker
 
 			ServiceLocator.SetLocatorProvider(() => new UnityServiceLocator(container));
 		}
+
+		private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+		{
+			var localizationService = LocalizationService.Default;
+
+			var isRecoverable = !e.Exception.IsFatal();
+
+			var lastInnerException = GetTheMostInnerException(e.Exception);
+
+			var exceptionKey = lastInnerException.GetType().ToString();
+
+			var errorText = localizationService.GetLocalizedString(exceptionKey + "_message");
+
+			if (string.IsNullOrEmpty(errorText))
+			{
+				errorText = localizationService.GetLocalizedString("GenericErrorText")
+					?? "Application has encountered unexpected error and will be shut down";
+			}
+
+			var errorCaption = localizationService.GetLocalizedString("GenericErrorCaption")
+				?? "Error";
+
+			MessageBox.Show(errorText,
+				errorCaption,
+				MessageBoxButton.OK,
+				MessageBoxImage.Error);
+
+			e.Handled = true;
+			if (!isRecoverable)
+			{
+				Shutdown();
+			}
+		}
+
+		private Exception GetTheMostInnerException(Exception exception)
+		{
+			var inner = exception;
+
+			while (inner.Maybe(e => e.InnerException) != null)
+			{
+				inner = inner.InnerException;
+			}
+
+			return inner;
+		}
+
+		private void OnDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			LogHelper.Error(e.ExceptionObject.ToString());
+		}
+
 	}
 }

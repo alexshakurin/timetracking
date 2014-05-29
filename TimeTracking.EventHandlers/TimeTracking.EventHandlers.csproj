@@ -43,11 +43,20 @@
     <Compile Include="IEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkingTimeRegisteredEventHandler.cs" />
+    <Compile Include="WorkingTimeRegisteredFileWriterHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TimeTracking.Export\TimeTracking.Export.csproj">
       <Project>{55f58786-abf6-4a8e-94c0-32a3c00ff114}</Project>
       <Name>TimeTracking.Export</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTracking.Extensions\TimeTracking.Extensions.csproj">
+      <Project>{d4594b93-ef12-44a2-aea5-97b9029da444}</Project>
+      <Name>TimeTracking.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTracking.Logging\TimeTracking.Logging.csproj">
+      <Project>{8c15d30d-92b2-4d63-a51c-a401bd823f7e}</Project>
+      <Name>TimeTracking.Logging</Name>
     </ProjectReference>
     <ProjectReference Include="..\TimeTracking.Model\TimeTracking.Model.csproj">
       <Project>{1bd06df3-22a6-4f01-83eb-d468ac039c76}</Project>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
@@ -12,6 +13,7 @@ using TimeTracking.Commands;
 using TimeTracking.Core;
 using TimeTracking.Infrastructure;
 using TimeTracking.Logging;
+using TimeTracking.ReadModel;
 
 namespace TimeTracker
 {
@@ -144,7 +146,7 @@ namespace TimeTracker
 			IMessageBoxService messageBox,
 			ILocalizationService localizationService)
 		{
-			UpdateTotalTime(baseTime);
+			SetTotalTime(baseTime);
 			this.commandBus = commandBus;
 			this.messageBox = messageBox;
 			this.localizationService = localizationService;
@@ -179,17 +181,27 @@ namespace TimeTracker
 				OnTimeRegistrationErrorCallback);
 		}
 
-		private void OnTimeChanged(TimeSpan totalTimeForPeriod)
+		private async void OnTimeChanged(TimeSpan totalTimeForPeriod)
 		{
-			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() => UpdateTotalTime(totalTimeForPeriod)));
+			var periodTotalTime = await Task.Run(() => ReadTotalTime(GetCurrentKey().Key));
+			SetTotalTime(periodTotalTime);
 		}
 
-		private void UpdateTotalTime(TimeSpan totalTimeForPeriod)
+		private TimeSpan ReadTotalTime(string key)
 		{
-			TotalTime = string.Format("{0:D2}:{1:D2}:{2:D2}",
-				totalTimeForPeriod.Hours,
-				totalTimeForPeriod.Minutes,
-				totalTimeForPeriod.Seconds);
+			var repository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
+			return repository.GetDurationForDay(key);
+		}
+
+		private void SetTotalTime(TimeSpan totalTimeForPeriod)
+		{
+			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
+			{
+				TotalTime = string.Format("{0:D2}:{1:D2}:{2:D2}",
+					totalTimeForPeriod.Hours,
+					totalTimeForPeriod.Minutes,
+					totalTimeForPeriod.Seconds);
+			}));
 		}
 
 		public override void Cleanup()

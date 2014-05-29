@@ -11,6 +11,7 @@ namespace TimeTracking.Core
 		public DateTimeOffset CurrentDate { get; private set; }
 
 		public DateTimeOffset PreviousDate { get; private set; }
+
 		public TimeSpan Elapsed { get; private set; }
 
 		public TimeSpan ElapsedSinceStart { get; private set; }

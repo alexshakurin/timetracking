@@ -21,8 +21,11 @@ namespace TimeTracking.Infrastructure.Impl
 			var eventType = typeof (T);
 			handlers[eventType] = @event =>
 			{
-				var handler = ServiceLocator.Current.GetInstance<IEventHandler<T>>();
-				handler.Handle((T)@event);
+				var eventHandlers = ServiceLocator.Current.GetAllInstances<IEventHandler<T>>();
+				foreach (var eventHandler in eventHandlers)
+				{
+					eventHandler.Handle((T)@event);
+				}
 			};
 		}
 
