@@ -2,6 +2,7 @@
 (
 	date text not null,
 	seconds integer not null,
+	latestmemo text null,
 	primary key(date)
 )
 

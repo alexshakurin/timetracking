@@ -6,6 +6,8 @@
 
 		public int Seconds { get; protected set; }
 
+		public string LatestMemo { get; set; }
+
 		// Required for EntityFramework
 		internal TimeTrackingStatistics()
 		{

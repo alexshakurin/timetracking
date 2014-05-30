@@ -13,7 +13,7 @@ namespace TimeTracking.ReadModel
 			this.contextFactory = contextFactory;
 		}
 
-		public void AddDurationForday(string day, TimeSpan duration)
+		public void UpdateDayStatistics(string day, TimeSpan duration, string memo)
 		{
 			using (var context = contextFactory())
 			{
@@ -27,25 +27,21 @@ namespace TimeTracking.ReadModel
 				}
 
 				existingStatistics.AddSeconds((int)duration.TotalSeconds);
+				existingStatistics.LatestMemo = memo;
 				context.SaveChanges();
 			}
 		}
 
-		public TimeSpan GetDurationForDay(string day)
+		public TimeTrackingStatistics GetStatisticsForDay(string day)
 		{
-			var duration = TimeSpan.Zero;
+			TimeTrackingStatistics statistics;
 			using (var context = contextFactory())
 			{
-				var statistics = context.Set<TimeTrackingStatistics>()
+				statistics = context.Set<TimeTrackingStatistics>()
 					.FirstOrDefault(tts => tts.Date == day);
-
-				if (statistics != null)
-				{
-					duration = TimeSpan.FromSeconds(statistics.Seconds);
-				}
 			}
 
-			return duration;
+			return statistics;
 		}
 	}
 }

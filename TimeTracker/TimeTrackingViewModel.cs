@@ -11,6 +11,7 @@ using TimeTracker.Views.ChangeTask;
 using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.Commands;
 using TimeTracking.Core;
+using TimeTracking.Extensions;
 using TimeTracking.Infrastructure;
 using TimeTracking.Logging;
 using TimeTracking.ReadModel;
@@ -142,6 +143,7 @@ namespace TimeTracker
 		}
 
 		public TimeTrackingViewModel(TimeSpan baseTime,
+			string memo,
 			ICommandBus commandBus,
 			IMessageBoxService messageBox,
 			ILocalizationService localizationService)
@@ -150,6 +152,7 @@ namespace TimeTracker
 			this.commandBus = commandBus;
 			this.messageBox = messageBox;
 			this.localizationService = localizationService;
+			Memo = memo;
 			core = new TimeTrackingCore(baseTime,
 				GetCurrentKey,
 				OnTimeChanged,
@@ -190,17 +193,16 @@ namespace TimeTracker
 		private TimeSpan ReadTotalTime(string key)
 		{
 			var repository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
-			return repository.GetDurationForDay(key);
+			return repository.GetStatisticsForDay(key).Maybe(s => TimeSpan.FromSeconds(s.Seconds), TimeSpan.Zero);
 		}
 
 		private void SetTotalTime(TimeSpan totalTimeForPeriod)
 		{
 			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
 			{
-				TotalTime = string.Format("{0:D2}:{1:D2}:{2:D2}",
+				TotalTime = string.Format("{0:D2}:{1:D2}",
 					totalTimeForPeriod.Hours,
-					totalTimeForPeriod.Minutes,
-					totalTimeForPeriod.Seconds);
+					totalTimeForPeriod.Minutes);
 			}));
 		}
 

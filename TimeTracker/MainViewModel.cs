@@ -97,14 +97,22 @@ namespace TimeTracker
 		{
 			try
 			{
-				var baseTime = await Task.Run(() =>
+				var stats = await Task.Run(() =>
 				{
 					var currentKey = TimeTracker.TimeTrackingViewModel.GetCurrentKey();
 					var repository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
-					return repository.GetDurationForDay(currentKey.Key);
+
+					var statistics = repository.GetStatisticsForDay(currentKey.Key);
+
+					return new
+						{
+							Duration = statistics.Maybe(s => TimeSpan.FromSeconds(s.Seconds), TimeSpan.Zero),
+							LatestMemo = statistics.Maybe(s => s.LatestMemo)
+						};
 				});
 
-				var vm = new TimeTrackingViewModel(baseTime,
+				var vm = new TimeTrackingViewModel(stats.Duration,
+					stats.LatestMemo,
 					commandBus,
 					messageBox,
 					localizationService);
