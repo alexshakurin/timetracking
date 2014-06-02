@@ -273,6 +273,7 @@ namespace TimeTracker
 				Memo = changeTaskView.ViewModel.Memo;
 				core.ChangeMemo(Memo);
 				ProjectName = changeTaskView.ViewModel.ProjectName;
+				RaisePropertyChanged(() => IsStarted);
 			}
 		}
 

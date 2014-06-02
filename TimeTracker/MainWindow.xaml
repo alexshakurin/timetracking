@@ -47,7 +47,10 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <Button Grid.Column="2" Grid.Row="0" Margin="5" Content="{Binding ActionHeader}" FontSize="12" Command="{Binding StartStopCommand}" />
+            <Button Grid.Column="2" Grid.Row="0" Margin="5" 
+                    Content="{Binding ActionHeader}" 
+                    FontSize="12" 
+                    Command="{Binding StartStopCommand}" />
 
             <TextBlock Grid.Row="1" Grid.Column="0"
                        Text="{x:Static l:Resources.CurrentTaskHeader}"

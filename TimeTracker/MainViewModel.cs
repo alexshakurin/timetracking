@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
@@ -117,6 +119,7 @@ namespace TimeTracker
 					messageBox,
 					localizationService);
 
+				vm.PropertyChanged += OnViewModelPropertyChanged;
 				TimeTrackingViewModel = vm;
 
 				CommandManager.InvalidateRequerySuggested();
@@ -124,6 +127,16 @@ namespace TimeTracker
 			catch (Exception ex)
 			{
 				throw new UnrecoverableApplicationException(ex.Message, ex);
+			}
+		}
+
+		private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			TimeTrackingViewModel vm = null;
+
+			if (e.PropertyName.PropertyNameIn(new Expression<Func<object>>[] {() => vm.IsStarted}))
+			{
+				RaisePropertyChanged(() => ActionHeader);
 			}
 		}
 
