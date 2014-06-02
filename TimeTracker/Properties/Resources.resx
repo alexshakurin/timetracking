@@ -141,6 +141,15 @@
   <data name="StartButton" xml:space="preserve">
     <value>Start</value>
   </data>
+  <data name="Statistics_Header" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="Statistics_ThisMonth" xml:space="preserve">
+    <value>This month</value>
+  </data>
+  <data name="Statistics_ThisWeek" xml:space="preserve">
+    <value>This week</value>
+  </data>
   <data name="StopButton" xml:space="preserve">
     <value>Stop</value>
   </data>

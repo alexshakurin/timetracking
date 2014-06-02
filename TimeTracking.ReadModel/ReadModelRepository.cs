@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TimeTracking.LocalStorage;
 
@@ -42,6 +43,22 @@ namespace TimeTracking.ReadModel
 			}
 
 			return statistics;
+		}
+
+		public TimeSpan GetTotalForPeriods(IReadOnlyCollection<string> periods)
+		{
+			var periodsList = new List<string>(periods);
+
+			IList<int> statisticsList;
+			using (var context = contextFactory())
+			{
+				statisticsList = context.Set<TimeTrackingStatistics>()
+					.Where(s => periodsList.Contains(s.Date))
+					.Select(s => s.Seconds)
+					.ToList();
+			}
+
+			return TimeSpan.FromSeconds(statisticsList.Sum());
 		}
 	}
 }

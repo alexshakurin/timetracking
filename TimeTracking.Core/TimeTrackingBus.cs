@@ -9,19 +9,13 @@ namespace TimeTracking.Core
 	{
 		private readonly BlockingCollection<TimePeriodProcessingUnit> collection;
 		private readonly Task processingTask;
-		private TimeSpan totalTime;
-		private Action<TimeSpan> timeChange;
 		private Action<TimeTrackingKey, DateTimeOffset, DateTimeOffset, string> save;
 
-		public TimeTrackingBus(TimeSpan totalTime,
-			Action<TimeSpan> timeChange,
-			Action<TimeTrackingKey, DateTimeOffset, DateTimeOffset, string> save)
+		public TimeTrackingBus(Action<TimeTrackingKey, DateTimeOffset, DateTimeOffset, string> save)
 		{
-			this.totalTime = totalTime;
 			collection = new BlockingCollection<TimePeriodProcessingUnit>();
 			processingTask = Task.Factory.StartNew(ProcessCollection,
 				TaskCreationOptions.LongRunning);
-			this.timeChange = timeChange;
 			this.save = save;
 		}
 
@@ -29,7 +23,6 @@ namespace TimeTracking.Core
 		{
 			collection.CompleteAdding();
 			processingTask.Wait();
-			timeChange = null;
 			save = null;
 		}
 
@@ -54,21 +47,11 @@ namespace TimeTracking.Core
 		private void ProcessCollection()
 		{
 			TrackingData currentData = null;
-			var counter = 0;
 			foreach (var nextUnit in collection.GetConsumingEnumerable())
 			{
 				var localCurrendData = currentData;
 				var localNextUnit = nextUnit;
 				currentData = ProcessTimeData(localCurrendData, localNextUnit);
-
-				totalTime = totalTime.Add(currentData.Maybe(cd => cd.Elapsed, TimeSpan.Zero));
-
-				counter++;
-				if (counter == 5)
-				{
-					timeChange.MaybeDo(tc => tc(totalTime));
-					counter = 0;
-				}
 			}
 		}
 

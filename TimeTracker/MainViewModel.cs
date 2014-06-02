@@ -1,10 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Win32;
 using TimeTracker.Localization;
@@ -22,12 +26,63 @@ namespace TimeTracker
 		private readonly ILocalizationService localizationService;
 		private readonly IMessageBoxService messageBox;
 		private readonly ICommandBus commandBus;
+		private readonly IDisposable refresh;
+
+		private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
 		private ICommand startStopCommand;
+		private string totalTime;
+		private string totalThisWeek;
+		private string totalThisMonth;
 
 		private bool isPaused;
 
 		private ITimeTrackingViewModel timeTrackingViewModel;
+
+		public string TotalThisMonth
+		{
+			get { return totalThisMonth; }
+			private set
+			{
+				if (totalThisMonth == value)
+				{
+					return;
+				}
+
+				totalThisMonth = value;
+				RaisePropertyChanged(() => TotalThisMonth);
+			}
+		}
+
+		public string TotalThisWeek
+		{
+			get { return totalThisWeek; }
+			private set
+			{
+				if (totalThisWeek == value)
+				{
+					return;
+				}
+
+				totalThisWeek = value;
+				RaisePropertyChanged(() => TotalThisWeek);
+			}
+		}
+
+		public string TotalTime
+		{
+			get { return totalTime; }
+			private set
+			{
+				if (totalTime == value)
+				{
+					return;
+				}
+
+				totalTime = value;
+				RaisePropertyChanged(() => TotalTime);
+			}
+		}
 
 		public ITimeTrackingViewModel TimeTrackingViewModel
 		{
@@ -81,6 +136,9 @@ namespace TimeTracker
 			SystemEvents.PowerModeChanged += PowerModeChanged;
 			SystemEvents.SessionSwitch += SessionSwitch;
 
+			refresh = Observable.Interval(TimeSpan.FromSeconds(5))
+				.Subscribe(l => RefreshTotals());
+
 			StartLoading();
 		}
 
@@ -88,6 +146,8 @@ namespace TimeTracker
 		{
 			SystemEvents.PowerModeChanged -= PowerModeChanged;
 			SystemEvents.SessionSwitch -= SessionSwitch;
+
+			refresh.MaybeDo(r => r.Dispose());
 
 			base.Cleanup();
 
@@ -113,8 +173,7 @@ namespace TimeTracker
 						};
 				});
 
-				var vm = new TimeTrackingViewModel(stats.Duration,
-					stats.LatestMemo,
+				var vm = new TimeTrackingViewModel(stats.LatestMemo,
 					commandBus,
 					messageBox,
 					localizationService);
@@ -202,6 +261,101 @@ namespace TimeTracker
 					t.StartOrStop();
 					RaisePropertyChanged(() => ActionHeader);
 				});
+		}
+
+		private void SetTotalTime(TimeSpan totalTimeForPeriod)
+		{
+			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
+			{
+				TotalTime = string.Format("{0:D2}:{1:D2}",
+					totalTimeForPeriod.Hours,
+					totalTimeForPeriod.Minutes);
+			}));
+		}
+
+		private void SetTotalForCurrentWeek(TimeSpan totalTimeForPeriod)
+		{
+			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
+			{
+				TotalThisWeek = string.Format("{0:D2}:{1:D2}",
+					totalTimeForPeriod.Hours,
+					totalTimeForPeriod.Minutes);
+			}));
+		}
+
+		private void SetTotalForCurrentMonth(TimeSpan totalTimeForPeriod)
+		{
+			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
+			{
+				TotalThisMonth = string.Format("{0:D2}:{1:D2}",
+					totalTimeForPeriod.Hours,
+					totalTimeForPeriod.Minutes);
+			}));
+		}
+
+		private TimeSpan ReadTotalForToday()
+		{
+			var repository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
+			return repository.GetStatisticsForDay(TimeTracker.TimeTrackingViewModel.GetCurrentKey().Key)
+				.Maybe(s => TimeSpan.FromSeconds(s.Seconds), TimeSpan.Zero);
+		}
+
+		private TimeSpan ReadTotalForCurrentMonth()
+		{
+			var currentDate = DateTime.Now.Date;
+			var firstDay = 1;
+			var lastday = DateTime.DaysInMonth(currentDate.Year, currentDate.Month);
+
+			var dates = Enumerable.Range(firstDay, lastday)
+				.Select(day => TimeTracker.TimeTrackingViewModel.ToTimeTrackingKey(
+					new DateTime(currentDate.Year, currentDate.Month, day)))
+				.Select(key => key.Key)
+				.ToList()
+				.AsReadOnly();
+
+			var repository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
+			return repository.GetTotalForPeriods(dates);
+		}
+
+		private TimeSpan ReadTotalForCurrentWeek()
+		{
+			var currentDate = DateTime.Now.Date;
+			var daysBefore = currentDate.DayOfWeek - DayOfWeek.Monday;
+			var daysAfter = DayOfWeek.Sunday - currentDate.DayOfWeek;
+
+			var firstDay = currentDate.Subtract(TimeSpan.FromDays(daysBefore));
+			var lastDay = currentDate.AddDays(daysAfter);
+
+			var dates = Enumerable.Range(firstDay.Day, lastDay.Day)
+				.Select(day => TimeTracker.TimeTrackingViewModel.ToTimeTrackingKey(
+					new DateTime(currentDate.Year, currentDate.Month, day)))
+				.Select(key => key.Key)
+				.ToList()
+				.AsReadOnly();
+
+			var repository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
+			return repository.GetTotalForPeriods(dates);
+		}
+
+		private async void RefreshTotals()
+		{
+			try
+			{
+				await semaphoreSlim.WaitAsync();
+				var totalForToday = Task.Run(() => ReadTotalForToday());
+				var totalForWeek = Task.Run(() => ReadTotalForCurrentWeek());
+				var totalForMonth = Task.Run(() => ReadTotalForCurrentMonth());
+
+				await Task.WhenAll(new Task[] {totalForToday, totalForWeek, totalForMonth});
+
+				SetTotalTime(totalForToday.Result);
+				SetTotalForCurrentWeek(totalForWeek.Result);
+				SetTotalForCurrentMonth(totalForMonth.Result);
+			}
+			finally
+			{
+				semaphoreSlim.Release();
+			}
 		}
 	}
 }

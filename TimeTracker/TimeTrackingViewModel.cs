@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
@@ -28,10 +27,7 @@ namespace TimeTracker
 
 		private ICommand changeTask;
 
-		private string totalTime;
 		private bool isStarted;
-
-		private string confirmedTime;
 
 		private string memo;
 
@@ -80,53 +76,6 @@ namespace TimeTracker
 			}
 		}
 
-		private Brush confirmedTimeForeground;
-
-		public Brush ConfirmedTimeForeground
-		{
-			get { return confirmedTimeForeground; }
-			set
-			{
-				if (confirmedTimeForeground == value)
-				{
-					return;
-				}
-
-				confirmedTimeForeground = value;
-				RaisePropertyChanged(() => ConfirmedTimeForeground);
-			}
-		}
-
-		public string ConfirmedTime
-		{
-			get { return confirmedTime; }
-			set
-			{
-				if (confirmedTime == value)
-				{
-					return;
-				}
-
-				confirmedTime = value;
-				RaisePropertyChanged(() => ConfirmedTime);
-			}
-		}
-
-		public string TotalTime
-		{
-			get { return totalTime; }
-			set
-			{
-				if (totalTime == value)
-				{
-					return;
-				}
-
-				totalTime = value;
-				RaisePropertyChanged(() => TotalTime);
-			}
-		}
-
 		public bool IsStarted
 		{
 			get { return isStarted; }
@@ -142,23 +91,26 @@ namespace TimeTracker
 			}
 		}
 
-		public TimeTrackingViewModel(TimeSpan baseTime,
-			string memo,
+		public TimeTrackingViewModel(string memo,
 			ICommandBus commandBus,
 			IMessageBoxService messageBox,
 			ILocalizationService localizationService)
 		{
-			SetTotalTime(baseTime);
 			this.commandBus = commandBus;
 			this.messageBox = messageBox;
 			this.localizationService = localizationService;
 			Memo = memo;
-			core = new TimeTrackingCore(baseTime,
-				GetCurrentKey,
-				OnTimeChanged,
+			core = new TimeTrackingCore(GetCurrentKey,
 				OnTimeSaved,
 				OnTrackingStarted,
 				OnTrackingStopped);
+		}
+
+		public static TimeTrackingKey ToTimeTrackingKey(DateTime dateTime)
+		{
+			var date = dateTime.ToString(format);
+
+			return new TimeTrackingKey(date, dateTime);
 		}
 
 		public static TimeTrackingKey GetCurrentKey()
@@ -182,28 +134,6 @@ namespace TimeTracker
 			TimePublisher.PublishTimeRegistration(commandBus,
 				command,
 				OnTimeRegistrationErrorCallback);
-		}
-
-		private async void OnTimeChanged(TimeSpan totalTimeForPeriod)
-		{
-			var periodTotalTime = await Task.Run(() => ReadTotalTime(GetCurrentKey().Key));
-			SetTotalTime(periodTotalTime);
-		}
-
-		private TimeSpan ReadTotalTime(string key)
-		{
-			var repository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
-			return repository.GetStatisticsForDay(key).Maybe(s => TimeSpan.FromSeconds(s.Seconds), TimeSpan.Zero);
-		}
-
-		private void SetTotalTime(TimeSpan totalTimeForPeriod)
-		{
-			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
-			{
-				TotalTime = string.Format("{0:D2}:{1:D2}",
-					totalTimeForPeriod.Hours,
-					totalTimeForPeriod.Minutes);
-			}));
 		}
 
 		public override void Cleanup()

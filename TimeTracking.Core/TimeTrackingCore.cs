@@ -14,9 +14,7 @@ namespace TimeTracking.Core
 		private Action trackingStarted;
 		private Action trackingStopped;
 
-
 		private Func<TimeTrackingKey> keyProvider;
-		private Action<TimeSpan> timeChanged;
 		private Action<RegisterTimeCommand> timeSave;
 
 		private IDisposable subscription;
@@ -24,22 +22,17 @@ namespace TimeTracking.Core
 
 		private bool isStarted;
 
-		public TimeTrackingCore(TimeSpan baseTime,
-			Func<TimeTrackingKey> keyProvider,
-			Action<TimeSpan> timeChanged,
+		public TimeTrackingCore(Func<TimeTrackingKey> keyProvider,
 			Action<RegisterTimeCommand> timeSave,
 			Action trackingStarted,
 			Action trackingStopped)
 		{
-			this.timeChanged = timeChanged;
 			this.timeSave = timeSave;
 			this.keyProvider = keyProvider;
 			this.trackingStarted = trackingStarted;
 			this.trackingStopped = trackingStopped;
 
-			trackingBus = new TimeTrackingBus(baseTime,
-				OnTotalTimeChange,
-				SaveTimeAndResetNoLock);
+			trackingBus = new TimeTrackingBus(SaveTimeAndResetNoLock);
 		}
 
 		public void Stop()
@@ -106,7 +99,6 @@ namespace TimeTracking.Core
 
 			trackingBus.MaybeDo(tb => tb.Dispose());
 			keyProvider = null;
-			timeChanged = null;
 			timeSave = null;
 			trackingStarted = null;
 			trackingStopped = null;
@@ -143,11 +135,6 @@ namespace TimeTracking.Core
 		private TimeTrackingKey GetCurrentKey()
 		{
 			return keyProvider.Maybe(x => x());
-		}
-
-		private void OnTotalTimeChange(TimeSpan currentTotalTime)
-		{
-			timeChanged.MaybeDo(t => t(currentTotalTime));
 		}
 
 		private void OnTimeTrackingStarted()
