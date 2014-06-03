@@ -320,15 +320,22 @@ namespace TimeTracker
 		private TimeSpan ReadTotalForCurrentWeek()
 		{
 			var currentDate = DateTime.Now.Date;
-			var daysBefore = currentDate.DayOfWeek - DayOfWeek.Monday;
-			var daysAfter = DayOfWeek.Sunday - currentDate.DayOfWeek;
+			var firstDayOfWeek = Thread.CurrentThread.CurrentUICulture.DateTimeFormat.FirstDayOfWeek;
 
-			var firstDay = currentDate.Subtract(TimeSpan.FromDays(daysBefore));
-			var lastDay = currentDate.AddDays(daysAfter);
+			var daysBefore = Math.Abs(currentDate.DayOfWeek - firstDayOfWeek);
 
-			var dates = Enumerable.Range(firstDay.Day, lastDay.Day)
+			var firstDayOfCurrentWeek = currentDate.Subtract(TimeSpan.FromDays(daysBefore));
+			//var daysAfter = DayOfWeek.Sunday - currentDate.DayOfWeek;
+
+			//var firstDay = currentDate.Subtract(TimeSpan.FromDays(daysBefore));
+			//var lastDay = currentDate.AddDays(daysAfter);
+
+			const int firstDay = 0;
+			const int daysCount = 7;
+
+			var dates = Enumerable.Range(firstDay, daysCount)
 				.Select(day => TimeTracker.TimeTrackingViewModel.ToTimeTrackingKey(
-					new DateTime(currentDate.Year, currentDate.Month, day)))
+					firstDayOfCurrentWeek.AddDays(day)))
 				.Select(key => key.Key)
 				.ToList()
 				.AsReadOnly();

@@ -22,11 +22,13 @@ namespace TimeTracking.Core
 
 		private bool isStarted;
 
-		public TimeTrackingCore(Func<TimeTrackingKey> keyProvider,
+		public TimeTrackingCore(string memo,
+			Func<TimeTrackingKey> keyProvider,
 			Action<RegisterTimeCommand> timeSave,
 			Action trackingStarted,
 			Action trackingStopped)
 		{
+			currentMemo = memo;
 			this.timeSave = timeSave;
 			this.keyProvider = keyProvider;
 			this.trackingStarted = trackingStarted;

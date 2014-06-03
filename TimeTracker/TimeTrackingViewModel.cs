@@ -100,7 +100,8 @@ namespace TimeTracker
 			this.messageBox = messageBox;
 			this.localizationService = localizationService;
 			Memo = memo;
-			core = new TimeTrackingCore(GetCurrentKey,
+			core = new TimeTrackingCore(memo,
+				GetCurrentKey,
 				OnTimeSaved,
 				OnTrackingStarted,
 				OnTrackingStopped);
