@@ -1,7 +1,7 @@
 ﻿create table timetracking
 (
 	date text not null,
-	seconds integer not null,
+	seconds real not null,
 	latestmemo text null,
 	primary key(date)
 )

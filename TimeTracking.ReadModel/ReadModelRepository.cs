@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using TimeTracking.LocalStorage;
 
 namespace TimeTracking.ReadModel
@@ -32,7 +31,7 @@ namespace TimeTracking.ReadModel
 						context.Set<TimeTrackingStatistics>().Add(existingStatistics);
 					}
 
-					existingStatistics.AddSeconds((int)duration.TotalSeconds);
+					existingStatistics.AddSeconds(duration.TotalSeconds);
 					existingStatistics.LatestMemo = memo;
 					context.SaveChanges();
 				}
@@ -55,7 +54,7 @@ namespace TimeTracking.ReadModel
 		{
 			var periodsList = new List<string>(periods);
 
-			IList<int> statisticsList;
+			IList<double> statisticsList;
 			using (var context = contextFactory())
 			{
 				statisticsList = context.Set<TimeTrackingStatistics>()

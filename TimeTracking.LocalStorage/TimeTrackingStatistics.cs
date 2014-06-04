@@ -4,7 +4,7 @@
 	{
 		public string Date { get; protected set; }
 
-		public int Seconds { get; protected set; }
+		public double Seconds { get; protected set; }
 
 		public string LatestMemo { get; set; }
 
@@ -18,7 +18,7 @@
 			Date = date;
 		}
 
-		public void AddSeconds(int seconds)
+		public void AddSeconds(double seconds)
 		{
 			Seconds += seconds;
 		}
