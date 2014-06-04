@@ -268,7 +268,7 @@ namespace TimeTracker
 			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
 			{
 				TotalTime = string.Format("{0:D2}:{1:D2}",
-					totalTimeForPeriod.Hours,
+					(int)(totalTimeForPeriod.TotalSeconds / 3600),
 					totalTimeForPeriod.Minutes);
 			}));
 		}
@@ -278,7 +278,7 @@ namespace TimeTracker
 			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
 			{
 				TotalThisWeek = string.Format("{0:D2}:{1:D2}",
-					totalTimeForPeriod.Hours,
+					(int)(totalTimeForPeriod.TotalSeconds / 3600),
 					totalTimeForPeriod.Minutes);
 			}));
 		}
@@ -288,7 +288,7 @@ namespace TimeTracker
 			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
 			{
 				TotalThisMonth = string.Format("{0:D2}:{1:D2}",
-					totalTimeForPeriod.Hours,
+					(int)(totalTimeForPeriod.TotalSeconds / 3600),
 					totalTimeForPeriod.Minutes);
 			}));
 		}

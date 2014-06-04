@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using TimeTracking.LocalStorage;
 
 namespace TimeTracking.ReadModel
 {
 	public class ReadModelRepository
 	{
+		private static readonly object syncRoot = new object();
+
 		private readonly Func<EventStoreDbContext> contextFactory;
 
 		public ReadModelRepository(Func<EventStoreDbContext> contextFactory)
@@ -16,20 +19,23 @@ namespace TimeTracking.ReadModel
 
 		public void UpdateDayStatistics(string day, TimeSpan duration, string memo)
 		{
-			using (var context = contextFactory())
+			lock (syncRoot)
 			{
-				var existingStatistics = context.Set<TimeTrackingStatistics>()
-					.FirstOrDefault(t => t.Date == day);
-
-				if (existingStatistics == null)
+				using (var context = contextFactory())
 				{
-					existingStatistics = new TimeTrackingStatistics(day);
-					context.Set<TimeTrackingStatistics>().Add(existingStatistics);
-				}
+					var existingStatistics = context.Set<TimeTrackingStatistics>()
+						.FirstOrDefault(t => t.Date == day);
 
-				existingStatistics.AddSeconds((int)duration.TotalSeconds);
-				existingStatistics.LatestMemo = memo;
-				context.SaveChanges();
+					if (existingStatistics == null)
+					{
+						existingStatistics = new TimeTrackingStatistics(day);
+						context.Set<TimeTrackingStatistics>().Add(existingStatistics);
+					}
+
+					existingStatistics.AddSeconds((int)duration.TotalSeconds);
+					existingStatistics.LatestMemo = memo;
+					context.SaveChanges();
+				}
 			}
 		}
 
