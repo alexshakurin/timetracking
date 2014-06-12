@@ -6,6 +6,12 @@
         ResizeMode="CanMinimize"
         Title="{x:Static l:Resources.Title}" Height="250" Width="350"
         DataContext="{Binding Main, Source={StaticResource locator}}">
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <Button Margin="1" Content="{x:Static l:Resources.EnterManualTime_Header}"
+                        Command="{Binding TimeTrackingViewModel.EnterManualTimeCommand}"/>
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo Description="Start/Stop">
             <TaskbarItemInfo.ThumbButtonInfos>
@@ -46,16 +52,10 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" >
-                <Button Margin="5" Width="Auto"
+                <Button Margin="5" Width="Auto" Grid.Column="2" Grid.Row="0" 
                     Content="{Binding ActionHeader}" 
                     FontSize="12" 
                     Command="{Binding StartStopCommand}" />
-                
-                <Button Margin="5" Content="{x:Static l:Resources.EnterManualTime_Header}"
-                        Command="{Binding TimeTrackingViewModel.EnterManualTimeCommand}"/>
-            </StackPanel>
-            
 
             <TextBlock Grid.Row="1" Grid.Column="0"
                        Text="{x:Static l:Resources.CurrentTaskHeader}"

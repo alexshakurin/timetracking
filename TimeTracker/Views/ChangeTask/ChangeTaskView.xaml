@@ -8,7 +8,8 @@
     <Window.InputBindings>
         <KeyBinding Command="{Binding CancelCommand}" Key="Escape" />
     </Window.InputBindings>
-    <Grid>
+    <Border x:Name="windowBorder" BorderBrush="#CC119EDA" BorderThickness="1 0 1 1">
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -27,4 +28,5 @@
             </StackPanel>
         </Border>
     </Grid>
+    </Border>
 </controls:MetroWindow>

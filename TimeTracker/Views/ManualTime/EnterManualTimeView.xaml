@@ -9,59 +9,66 @@
     <Window.InputBindings>
         <KeyBinding Command="{Binding CancelCommand}" Key="Escape" />
     </Window.InputBindings>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="35" />
-        </Grid.RowDefinitions>
-
-        <Grid Grid.Row="1">
+    <Border x:Name="windowBorder" BorderBrush="#CC119EDA" BorderThickness="1 0 1 1">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="35" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{x:Static properties:Resources.ManualTime_StartDate}" />
-            <DatePicker SelectedDate="{Binding StartDate, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Margin="5" />
-            <xctk:TimePicker Grid.Row="1" Grid.Column="1" Margin="5"
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{x:Static properties:Resources.ManualTime_StartDate}"
+                           FontWeight="Bold" FontSize="11"/>
+                <DatePicker SelectedDate="{Binding StartDate, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Margin="5" />
+                <xctk:TimePicker Grid.Row="1" Grid.Column="1" Margin="5"
                              Format="LongTime"
                              Value="{Binding StartTime, Mode=TwoWay}" />
-            <TextBlock Grid.Row="2" Grid.Column="0" Margin="5"
+                <TextBlock Grid.Row="2" Grid.Column="0" Margin="5"
+                           FontWeight="Bold" FontSize="11"
                        Text="{x:Static properties:Resources.ManualTime_EndDate}" />
-            <DatePicker Grid.Row="3" Grid.Column="0" Margin="5"
+                <DatePicker Grid.Row="3" Grid.Column="0" Margin="5"
                         SelectedDate="{Binding EndDate, Mode=TwoWay}" />
-            <xctk:TimePicker Grid.Row="3" Grid.Column="1" Margin="5" 
+                <xctk:TimePicker Grid.Row="3" Grid.Column="1" Margin="5" 
                              Format="LongTime"
                              Value="{Binding EndTime, Mode=TwoWay}" />
-            <TextBlock Grid.Row="4" Grid.Column="0" Margin="5" Text="{x:Static properties:Resources.ManualTime_Memo}" />
-            <TextBox AcceptsReturn="True" Grid.Row="5" Margin="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Memo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <Button Grid.Row="7" Grid.Column="1" Content="{x:Static properties:Resources.AddManulTimeButton}"
+                <TextBlock Grid.Row="4" Grid.Column="0" 
+                           FontWeight="Bold" FontSize="11"
+                           Margin="5" Text="{x:Static properties:Resources.ManualTime_Memo}" />
+                <TextBox AcceptsReturn="True" Grid.Row="5" Margin="5" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Memo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Button Grid.Row="7" Grid.Column="1" Content="{x:Static properties:Resources.AddManulTimeButton}"
                     Margin="5"
                     Command="{Binding AddManualTimeCommand}" />
+            </Grid>
+            <ItemsControl Grid.Row="2" ItemsSource="{Binding Errors}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" Foreground="Red" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Border Background="{DynamicResource DialogButtonsBackground}" Grid.Row="4">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Width="100" Margin="5" Content="{x:Static properties:Resources.CloseButton}" Command="{Binding CancelCommand}" />
+                </StackPanel>
+            </Border>
         </Grid>
-        <ItemsControl Grid.Row="2" ItemsSource="{Binding Errors}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}" Foreground="Red" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        <Border Background="{DynamicResource DialogButtonsBackground}" Grid.Row="4">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Width="100" Margin="5" Content="{x:Static properties:Resources.CloseButton}" Command="{Binding CancelCommand}" />
-            </StackPanel>
-        </Border>
-    </Grid>
+    </Border>
+   
 </controls:MetroWindow>

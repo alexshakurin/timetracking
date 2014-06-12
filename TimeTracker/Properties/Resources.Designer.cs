@@ -133,7 +133,7 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MT.
+        ///   Looks up a localized string similar to manual time.
         /// </summary>
         public static string EnterManualTime_Header {
             get {
@@ -160,7 +160,7 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Memo.
+        ///   Looks up a localized string similar to Memo:.
         /// </summary>
         public static string ManualTime_Memo {
             get {

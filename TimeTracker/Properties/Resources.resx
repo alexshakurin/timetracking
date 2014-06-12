@@ -142,7 +142,7 @@
     <value>Current task</value>
   </data>
   <data name="EnterManualTime_Header" xml:space="preserve">
-    <value>MT</value>
+    <value>manual time</value>
   </data>
   <data name="EnterManualTime_Title" xml:space="preserve">
     <value>Enter manual time</value>
@@ -157,7 +157,7 @@
     <value>End:</value>
   </data>
   <data name="ManualTime_Memo" xml:space="preserve">
-    <value>Memo</value>
+    <value>Memo:</value>
   </data>
   <data name="ManualTime_StartDate" xml:space="preserve">
     <value>Start:</value>
