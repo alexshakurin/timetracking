@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using TimeTracker.Localization;
+using TimeTracker.Messages;
 using TimeTracker.TimePublishing;
 using TimeTracker.Views.ChangeTask;
+using TimeTracker.Views.ManualTime;
 using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.Commands;
 using TimeTracking.Core;
-using TimeTracking.Extensions;
 using TimeTracking.Infrastructure;
 using TimeTracking.Logging;
-using TimeTracking.ReadModel;
 
 namespace TimeTracker
 {
@@ -25,11 +24,26 @@ namespace TimeTracker
 		private readonly ITimeTrackingCore core;
 		private const string format = "yyyy-MM-dd";
 
+		private ICommand enterManualTimeCommand;
+
 		private ICommand changeTask;
 
 		private bool isStarted;
 
 		private string memo;
+
+		public ICommand EnterManualTimeCommand
+		{
+			get
+			{
+				if (enterManualTimeCommand == null)
+				{
+					enterManualTimeCommand = new RelayCommand(ExecuteEnterManualTime);
+				}
+
+				return enterManualTimeCommand;
+			}
+		}
 
 		public ICommand ChangeTask
 		{
@@ -100,6 +114,8 @@ namespace TimeTracker
 			this.messageBox = messageBox;
 			this.localizationService = localizationService;
 			Memo = memo;
+
+			MessengerInstance.Register<ManualTimeRegistered>(this, OnManualTimeRegistered);
 			core = new TimeTrackingCore(memo,
 				GetCurrentKey,
 				OnTimeSaved,
@@ -114,10 +130,15 @@ namespace TimeTracker
 			return new TimeTrackingKey(date, dateTime);
 		}
 
+		public static TimeTrackingKey GetKey(DateTime date)
+		{
+			return new TimeTrackingKey(date.ToString(format), date);
+		}
+
 		public static TimeTrackingKey GetCurrentKey()
 		{
 			var date = DateTime.Now.Date;
-			return new TimeTrackingKey(date.ToString(format), date);
+			return GetKey(date);
 		}
 
 		private void OnTrackingStopped()
@@ -211,6 +232,22 @@ namespace TimeTracker
 		private void OnTimeRegistrationErrorCallback(Exception error)
 		{
 			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() => OnTimeRegistrationError(error)));
+		}
+
+		private void ExecuteEnterManualTime()
+		{
+			var enterManulTimeView = ServiceLocator.Current.GetInstance<IEnterManualTimeView>();
+
+			enterManulTimeView.ViewModel.Memo = Memo;
+			enterManulTimeView.ShowDialog();
+		}
+
+		private void OnManualTimeRegistered(ManualTimeRegistered msg)
+		{
+			if (msg.Command != null)
+			{
+				OnTimeSaved(msg.Command);
+			}
 		}
 
 		private void OnTimeRegistrationError(Exception error)

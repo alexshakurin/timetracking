@@ -61,6 +61,15 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        public static string AddManulTimeButton {
+            get {
+                return ResourceManager.GetString("AddManulTimeButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string CancelButton {
@@ -106,11 +115,83 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string CloseButton {
+            get {
+                return ResourceManager.GetString("CloseButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current task.
         /// </summary>
         public static string CurrentTaskHeader {
             get {
                 return ResourceManager.GetString("CurrentTaskHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MT.
+        /// </summary>
+        public static string EnterManualTime_Header {
+            get {
+                return ResourceManager.GetString("EnterManualTime_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter manual time.
+        /// </summary>
+        public static string EnterManualTime_Title {
+            get {
+                return ResourceManager.GetString("EnterManualTime_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End:.
+        /// </summary>
+        public static string ManualTime_EndDate {
+            get {
+                return ResourceManager.GetString("ManualTime_EndDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Memo.
+        /// </summary>
+        public static string ManualTime_Memo {
+            get {
+                return ResourceManager.GetString("ManualTime_Memo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start:.
+        /// </summary>
+        public static string ManualTime_StartDate {
+            get {
+                return ResourceManager.GetString("ManualTime_StartDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time added.
+        /// </summary>
+        public static string ManualTimeAdded_Caption {
+            get {
+                return ResourceManager.GetString("ManualTimeAdded_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual time added.
+        /// </summary>
+        public static string ManualTimeAdded_Message {
+            get {
+                return ResourceManager.GetString("ManualTimeAdded_Message", resourceCulture);
             }
         }
         
@@ -210,6 +291,42 @@ namespace TimeTracker.Properties {
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End must be at least one minute in past.
+        /// </summary>
+        public static string ValidateManualTime_EndDateMustBeAtLeastOneMinute {
+            get {
+                return ResourceManager.GetString("ValidateManualTime_EndDateMustBeAtLeastOneMinute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End cannot be in the future.
+        /// </summary>
+        public static string ValidateManualTime_EndGreaterThanNow {
+            get {
+                return ResourceManager.GetString("ValidateManualTime_EndGreaterThanNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End must be greater than start.
+        /// </summary>
+        public static string ValidateManualTime_EndGreaterThanStart {
+            get {
+                return ResourceManager.GetString("ValidateManualTime_EndGreaterThanStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start and end dates must be the same date.
+        /// </summary>
+        public static string ValidateManualTime_StartAndEndMustBeTheSameDate {
+            get {
+                return ResourceManager.GetString("ValidateManualTime_StartAndEndMustBeTheSameDate", resourceCulture);
             }
         }
     }

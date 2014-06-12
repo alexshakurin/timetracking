@@ -86,9 +86,9 @@ namespace TimeTracking.Core
 					var combined = currentData.Tick(unit.Data.Key, unit.Data.CurrentTime);
 
 #if DEBUG
-					const double secondsToSave = 5;
+					const double secondsToSave = 30;
 #else
-					const double secondsToSave = 20;
+					const double secondsToSave = 60;
 #endif
 
 					if (combined.ElapsedSinceStart.TotalSeconds > secondsToSave)

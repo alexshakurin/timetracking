@@ -7,6 +7,7 @@ using Microsoft.Practices.Unity;
 using TimeTracker.Localization;
 using TimeTracker.RestApiExport;
 using TimeTracker.Views.ChangeTask;
+using TimeTracker.Views.ManualTime;
 using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.CommandHandlers;
 using TimeTracking.Commands;
@@ -79,6 +80,7 @@ namespace TimeTracker
 			container.RegisterType<ReadModelRepository>();
 
 			container.RegisterType<IChangeTaskView, ChangeTaskView>();
+			container.RegisterType<IEnterManualTimeView, EnterManualTimeView>();
 
 			ServiceLocator.SetLocatorProvider(() => new UnityServiceLocator(container));
 		}

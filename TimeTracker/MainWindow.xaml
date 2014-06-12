@@ -46,10 +46,16 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-            <Button Grid.Column="2" Grid.Row="0" Margin="5" 
+            <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" >
+                <Button Margin="5" Width="Auto"
                     Content="{Binding ActionHeader}" 
                     FontSize="12" 
                     Command="{Binding StartStopCommand}" />
+                
+                <Button Margin="5" Content="{x:Static l:Resources.EnterManualTime_Header}"
+                        Command="{Binding TimeTrackingViewModel.EnterManualTimeCommand}"/>
+            </StackPanel>
+            
 
             <TextBlock Grid.Row="1" Grid.Column="0"
                        Text="{x:Static l:Resources.CurrentTaskHeader}"

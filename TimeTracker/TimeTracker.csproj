@@ -113,6 +113,24 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.2.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -124,6 +142,7 @@
     <Compile Include="ITimeTrackingViewModel.cs" />
     <Compile Include="Localization\ILocalizationService.cs" />
     <Compile Include="Localization\LocalizationService.cs" />
+    <Compile Include="Messages\ManualTimeRegistered.cs" />
     <Compile Include="Properties\Resources.de.Designer.cs">
       <DependentUpon>Resources.de.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -137,12 +156,17 @@
     <Compile Include="ViewModels\ChangeTask\ChangeTaskViewModel.cs" />
     <Compile Include="ViewModels\ClosableViewModel.cs" />
     <Compile Include="ViewModels\CloseEventArgs.cs" />
+    <Compile Include="ViewModels\ManualTime\EnterManualTimeViewModel.cs" />
     <Compile Include="Views\ChangeTask\ChangeTaskView.xaml.cs">
       <DependentUpon>ChangeTaskView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ChangeTask\IChangeTaskView.cs" />
     <Compile Include="Views\IView.cs" />
     <Compile Include="Views\IViewWithViewModel.cs" />
+    <Compile Include="Views\ManualTime\EnterManualTimeView.xaml.cs">
+      <DependentUpon>EnterManualTimeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ManualTime\IEnterManualTimeView.cs" />
     <Page Include="Common\Common.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -161,6 +185,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\ChangeTask\ChangeTaskView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ManualTime\EnterManualTimeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,6 +7,8 @@ namespace TimeTracker
 	{
 		ICommand ChangeTask { get; }
 
+		ICommand EnterManualTimeCommand { get; }
+
 		string Memo { get; }
 
 		string ProjectName { get; }
