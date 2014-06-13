@@ -1,4 +1,5 @@
-﻿using TimeTracking.Model;
+﻿using System.Collections.Generic;
+using TimeTracking.Model;
 
 namespace TimeTracking.Infrastructure
 {
@@ -17,5 +18,11 @@ namespace TimeTracking.Infrastructure
 		/// <param name="eventSourced">The entity.</param>
 		/// <param name="correlationId">A correlation id to use when publishing events.</param>
 		void Save(T eventSourced, string correlationId);
+
+		/// <summary>
+		/// Lists all keys for a specific aggregate.
+		/// </summary>
+		/// <returns></returns>
+		IReadOnlyCollection<string> ListAllKeys();
 	}
 }

@@ -34,6 +34,22 @@ namespace TimeTracking.Infrastructure.Impl
 			entityFactory = (id, events) => (T)constructor.Invoke(new object[] { id, events });
 		}
 
+		public IReadOnlyCollection<string> ListAllKeys()
+		{
+			IReadOnlyCollection<string> list;
+			using (var context = contextFactory.Invoke())
+			{
+				list = context.Set<StoredEvent>()
+					.Where(x => x.AggregateType == sourceType)
+					.Select(x => x.AggregateId)
+					.Distinct()
+					.ToList()
+					.AsReadOnly();
+			}
+
+			return list;
+		}
+
 		public T Find(string id)
 		{
 			using (var context = contextFactory.Invoke())

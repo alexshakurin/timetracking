@@ -6,10 +6,28 @@
         ResizeMode="CanMinimize"
         Title="{x:Static l:Resources.Title}" Height="250" Width="350"
         DataContext="{Binding Main, Source={StaticResource locator}}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <Button Margin="1" Content="{x:Static l:Resources.EnterManualTime_Header}"
                         Command="{Binding TimeTrackingViewModel.EnterManualTimeCommand}"/>
+            <Button Margin="1" Command="{Binding RefreshStatisticsCommand}"
+                    ToolTip="{x:Static l:Resources.RefreshStatisticsButton}">
+                <Rectangle Width="20" Height="20"
+                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill"
+                         Visual="{StaticResource appbar_refresh}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+
+            </Button>
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
     <Window.TaskbarItemInfo>

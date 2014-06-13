@@ -22,5 +22,10 @@
 		{
 			Seconds += seconds;
 		}
+
+		public void SetSeconds(double totalSeconds)
+		{
+			Seconds = totalSeconds;
+		}
 	}
 }

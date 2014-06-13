@@ -12,6 +12,7 @@ using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Win32;
 using TimeTracker.Localization;
+using TimeTracker.TimePublishing;
 using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.Extensions;
 using TimeTracking.Extensions.Exceptions;
@@ -31,6 +32,7 @@ namespace TimeTracker
 		private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
 		private ICommand startStopCommand;
+		private ICommand refreshStatisticsCommand;
 		private string totalTime;
 		private string totalThisWeek;
 		private string totalThisMonth;
@@ -38,6 +40,19 @@ namespace TimeTracker
 		private bool isPaused;
 
 		private ITimeTrackingViewModel timeTrackingViewModel;
+
+		public ICommand RefreshStatisticsCommand
+		{
+			get
+			{
+				if (refreshStatisticsCommand == null)
+				{
+					refreshStatisticsCommand = new RelayCommand(RefreshStatistics);
+				}
+
+				return refreshStatisticsCommand;
+			}
+		}
 
 		public string TotalThisMonth
 		{
@@ -363,6 +378,18 @@ namespace TimeTracker
 			{
 				semaphoreSlim.Release();
 			}
+		}
+
+		private void RefreshStatistics()
+		{
+			TimePublisher.Refresh(OnError);
+		}
+
+		private void OnError(Exception error)
+		{
+			TimeTracker.TimeTrackingViewModel.OnTimeRegistrationError(error,
+				localizationService,
+				messageBox);
 		}
 	}
 }

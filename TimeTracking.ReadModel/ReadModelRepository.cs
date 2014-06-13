@@ -16,6 +16,51 @@ namespace TimeTracking.ReadModel
 			this.contextFactory = contextFactory;
 		}
 
+		public void DeleteMissingKeys(IReadOnlyCollection<string> keys)
+		{
+			lock (syncRoot)
+			{
+				using (var context = contextFactory())
+				{
+					var existingKeys = context.Set<TimeTrackingStatistics>()
+						.Select(s => s.Date)
+						.Distinct()
+						.ToList();
+
+					var missingKeys = existingKeys.Except(keys).ToList();
+
+					var statisticsToDelete = context.Set<TimeTrackingStatistics>()
+						.Where(s => missingKeys.Contains(s.Date))
+						.ToList();
+
+					context.Set<TimeTrackingStatistics>().RemoveRange(statisticsToDelete);
+
+					context.SaveChanges();
+				}
+			}
+		}
+
+		public void SetDayStatistics(string day, TimeSpan duration)
+		{
+			lock (syncRoot)
+			{
+				using (var context = contextFactory())
+				{
+					var existingStatistics = context.Set<TimeTrackingStatistics>()
+						.FirstOrDefault(t => t.Date == day);
+
+					if (existingStatistics == null)
+					{
+						existingStatistics = new TimeTrackingStatistics(day);
+						context.Set<TimeTrackingStatistics>().Add(existingStatistics);
+					}
+
+					existingStatistics.SetSeconds(duration.TotalSeconds);
+					context.SaveChanges();
+				}
+			}
+		}
+
 		public void UpdateDayStatistics(string day, TimeSpan duration, string memo)
 		{
 			lock (syncRoot)

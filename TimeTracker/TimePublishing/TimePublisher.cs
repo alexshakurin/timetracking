@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Practices.ServiceLocation;
 using TimeTracking.Commands;
 using TimeTracking.Infrastructure;
+using TimeTracking.Model;
+using TimeTracking.ReadModel;
 
 namespace TimeTracker.TimePublishing
 {
@@ -10,17 +13,45 @@ namespace TimeTracker.TimePublishing
 	{
 		private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
-		//public static void PublishTimeRegistration(ICommandBus commandBus,
-		//	string timeKey,
-		//	DateTime date,
-		//	TimeSpan duration,
-		//	string memo,
-		//	Action<Exception> onTimeRegistrationError)
-		//{
-		//	PublishTimeRegistration(commandBus,
-		//		new RegisterTimeCommand(timeKey, date, duration, memo),
-		//		onTimeRegistrationError);
-		//}
+		public static void Refresh(Action<Exception> onError)
+		{
+			Task.Run(async () =>
+				{
+					Exception error = null;
+
+					try
+					{
+						await semaphoreSlim.WaitAsync();
+
+						var eventSourcedRepository = ServiceLocator.Current.GetInstance<IEventSourcedRepository<WorkingTime>>();
+
+						var existingKeys = eventSourcedRepository.ListAllKeys();
+
+						var readModelRepository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
+
+						foreach (var aggregateId in existingKeys)
+						{
+							var workingTime = eventSourcedRepository.Find(aggregateId);
+							readModelRepository.SetDayStatistics(aggregateId, workingTime.Total);
+						}
+
+						readModelRepository.DeleteMissingKeys(existingKeys);
+					}
+					catch (Exception ex)
+					{
+						error = ex;
+					}
+					finally
+					{
+						semaphoreSlim.Release();
+					}
+
+					if (error != null)
+					{
+						onError(error);
+					}
+				});
+		}
 
 		public static void PublishTimeRegistration(ICommandBus commandBus,
 			RegisterTimeCommand command,

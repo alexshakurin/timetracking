@@ -231,7 +231,9 @@ namespace TimeTracker
 
 		private void OnTimeRegistrationErrorCallback(Exception error)
 		{
-			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() => OnTimeRegistrationError(error)));
+			DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() => OnTimeRegistrationError(error,
+				localizationService,
+				messageBox)));
 		}
 
 		private void ExecuteEnterManualTime()
@@ -250,7 +252,9 @@ namespace TimeTracker
 			}
 		}
 
-		private void OnTimeRegistrationError(Exception error)
+		public static void OnTimeRegistrationError(Exception error,
+			ILocalizationService localizationService,
+			IMessageBoxService messageBox)
 		{
 			LogHelper.Error(error.ToString());
 			var caption = localizationService.GetLocalizedString("TimeRegistrationError_Caption");

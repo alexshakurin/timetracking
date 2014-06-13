@@ -205,6 +205,15 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to refresh statistics.
+        /// </summary>
+        public static string RefreshStatisticsButton {
+            get {
+                return ResourceManager.GetString("RefreshStatisticsButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start.
         /// </summary>
         public static string StartButton {
