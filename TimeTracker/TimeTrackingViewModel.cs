@@ -9,6 +9,7 @@ using TimeTracker.TimePublishing;
 using TimeTracker.Views.ChangeTask;
 using TimeTracker.Views.ManualTime;
 using TimeTracking.ApplicationServices.Dialogs;
+using TimeTracking.ApplicationServices.Settings;
 using TimeTracking.Commands;
 using TimeTracking.Core;
 using TimeTracking.Infrastructure;
@@ -20,6 +21,7 @@ namespace TimeTracker
 	{
 		private readonly ICommandBus commandBus;
 		private readonly IMessageBoxService messageBox;
+		private readonly ISettingsService settingsService;
 		private readonly ILocalizationService localizationService;
 		private readonly ITimeTrackingCore core;
 		private const string format = "yyyy-MM-dd";
@@ -105,15 +107,16 @@ namespace TimeTracker
 			}
 		}
 
-		public TimeTrackingViewModel(string memo,
+		public TimeTrackingViewModel(ISettingsService settingsService,
 			ICommandBus commandBus,
 			IMessageBoxService messageBox,
 			ILocalizationService localizationService)
 		{
 			this.commandBus = commandBus;
 			this.messageBox = messageBox;
+			this.settingsService = settingsService;
 			this.localizationService = localizationService;
-			Memo = memo;
+			Memo = settingsService.GetLatestMemo();
 
 			MessengerInstance.Register<ManualTimeRegistered>(this, OnManualTimeRegistered);
 			core = new TimeTrackingCore(memo,
@@ -223,6 +226,7 @@ namespace TimeTracker
 			if (result.HasValue && result.Value)
 			{
 				Memo = changeTaskView.ViewModel.Memo;
+				settingsService.SetLatestMemo(memo);
 				core.ChangeMemo(Memo);
 				ProjectName = changeTaskView.ViewModel.ProjectName;
 				RaisePropertyChanged(() => IsStarted);

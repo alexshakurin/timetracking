@@ -44,8 +44,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkingTimeRegisteredEventHandler.cs" />
     <Compile Include="WorkingTimeRegisteredFileWriterHandler.cs" />
+    <Compile Include="WorkingTimeRegisteredSettingsHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TimeTracking.ApplicationServices\TimeTracking.ApplicationServices.csproj">
+      <Project>{189c4fa8-208c-4420-b230-f036a5e9400d}</Project>
+      <Name>TimeTracking.ApplicationServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TimeTracking.Export\TimeTracking.Export.csproj">
       <Project>{55f58786-abf6-4a8e-94c0-32a3c00ff114}</Project>
       <Name>TimeTracking.Export</Name>

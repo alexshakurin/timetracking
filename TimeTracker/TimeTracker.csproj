@@ -149,6 +149,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="RestApiExport\RestApiTimeService.cs" />
+    <Compile Include="Settings\SettingsService.cs" />
     <Compile Include="TimePublishing\TimePublisher.cs" />
     <Compile Include="TimeTrackingViewModel.cs" />
     <Compile Include="ViewModel.cs" />

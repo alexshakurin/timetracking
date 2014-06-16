@@ -14,6 +14,7 @@ using Microsoft.Win32;
 using TimeTracker.Localization;
 using TimeTracker.TimePublishing;
 using TimeTracking.ApplicationServices.Dialogs;
+using TimeTracking.ApplicationServices.Settings;
 using TimeTracking.Extensions;
 using TimeTracking.Extensions.Exceptions;
 using TimeTracking.Infrastructure;
@@ -26,6 +27,7 @@ namespace TimeTracker
 	{
 		private readonly ILocalizationService localizationService;
 		private readonly IMessageBoxService messageBox;
+		private readonly ISettingsService settingsService;
 		private readonly ICommandBus commandBus;
 		private readonly IDisposable refresh;
 
@@ -146,6 +148,7 @@ namespace TimeTracker
 		{
 			localizationService = ServiceLocator.Current.GetInstance<ILocalizationService>();
 			messageBox = ServiceLocator.Current.GetInstance<IMessageBoxService>();
+			settingsService = ServiceLocator.Current.GetInstance<ISettingsService>();
 			commandBus = ServiceLocator.Current.GetInstance<ICommandBus>();
 
 			SystemEvents.PowerModeChanged += PowerModeChanged;
@@ -170,25 +173,11 @@ namespace TimeTracker
 			TimeTrackingViewModel.MaybeDo(ttvm => ttvm.Cleanup());
 		}
 
-		private async void StartLoading()
+		private void StartLoading()
 		{
 			try
 			{
-				var stats = await Task.Run(() =>
-				{
-					var currentKey = TimeTracker.TimeTrackingViewModel.GetCurrentKey();
-					var repository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
-
-					var statistics = repository.GetStatisticsForDay(currentKey.Key);
-
-					return new
-						{
-							Duration = statistics.Maybe(s => TimeSpan.FromSeconds(s.Seconds), TimeSpan.Zero),
-							LatestMemo = statistics.Maybe(s => s.LatestMemo)
-						};
-				});
-
-				var vm = new TimeTrackingViewModel(stats.LatestMemo,
+				var vm = new TimeTrackingViewModel(settingsService,
 					commandBus,
 					messageBox,
 					localizationService);

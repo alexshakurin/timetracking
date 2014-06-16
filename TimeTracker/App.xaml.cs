@@ -6,9 +6,11 @@ using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using TimeTracker.Localization;
 using TimeTracker.RestApiExport;
+using TimeTracker.Settings;
 using TimeTracker.Views.ChangeTask;
 using TimeTracker.Views.ManualTime;
 using TimeTracking.ApplicationServices.Dialogs;
+using TimeTracking.ApplicationServices.Settings;
 using TimeTracking.CommandHandlers;
 using TimeTracking.Commands;
 using TimeTracking.EventHandlers;
@@ -45,9 +47,6 @@ namespace TimeTracker
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
-			//System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("de");
-			//System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("de");
-
 			LogHelper.Debug("Starting application");
 
 			base.OnStartup(e);
@@ -59,14 +58,16 @@ namespace TimeTracker
 			container.RegisterInstance(eventDispather);
 			container.RegisterType<IEventHandler<WorkingTimeRegistered>, WorkingTimeRegisteredEventHandler>("readModelHandler");
 			container.RegisterType<IEventHandler<WorkingTimeRegistered>, WorkingTimeRegisteredFileWriterHandler>("fileSystemHandler");
+			container.RegisterType<IEventHandler<WorkingTimeRegistered>, WorkingTimeRegisteredSettingsHandler>("settingsHandler");
 
+			container.RegisterType<ISettingsService, SettingsService>();
 			container.RegisterType<ILocalizationService, LocalizationService>();
 			container.RegisterType<IMessageBoxService, MessageBoxService>();
 			container.RegisterType<ITimeTrackingViewModel, TimeTrackingViewModel>();
 			container.RegisterType<IEventBus, EventBus>();
 			container.RegisterType<ICommandBus, SynchronousCommandBus>();
 			container.RegisterType<MainViewModel>();
-			//container.RegisterType<ITimeService, FileSystemTimeService>();
+
 			var service = new RestApiTimeService("localhost:9000", "2");
 			container.RegisterInstance<ITimeService>(service);
 			container.RegisterInstance<ITextSerializer>(new JsonTextSerializer());
