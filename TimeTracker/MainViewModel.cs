@@ -337,9 +337,14 @@ namespace TimeTracker
 			var currentDate = DateTime.Now.Date;
 			var firstDayOfWeek = Thread.CurrentThread.CurrentUICulture.DateTimeFormat.FirstDayOfWeek;
 
-			var daysBefore = Math.Abs(currentDate.DayOfWeek - firstDayOfWeek);
+			while (currentDate.DayOfWeek != firstDayOfWeek)
+			{
+				currentDate = currentDate.Subtract(TimeSpan.FromDays(1));
+			}
 
-			var firstDayOfCurrentWeek = currentDate.Subtract(TimeSpan.FromDays(daysBefore));
+			//var daysBefore = Math.Abs(currentDate.DayOfWeek - firstDayOfWeek);
+
+			var firstDayOfCurrentWeek = currentDate;
 			//var daysAfter = DayOfWeek.Sunday - currentDate.DayOfWeek;
 
 			//var firstDay = currentDate.Subtract(TimeSpan.FromDays(daysBefore));
