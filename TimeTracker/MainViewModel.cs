@@ -342,13 +342,7 @@ namespace TimeTracker
 				currentDate = currentDate.Subtract(TimeSpan.FromDays(1));
 			}
 
-			//var daysBefore = Math.Abs(currentDate.DayOfWeek - firstDayOfWeek);
-
 			var firstDayOfCurrentWeek = currentDate;
-			//var daysAfter = DayOfWeek.Sunday - currentDate.DayOfWeek;
-
-			//var firstDay = currentDate.Subtract(TimeSpan.FromDays(daysBefore));
-			//var lastDay = currentDate.AddDays(daysAfter);
 
 			const int firstDay = 0;
 			const int daysCount = 7;
