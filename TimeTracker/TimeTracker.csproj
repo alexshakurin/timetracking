@@ -144,6 +144,7 @@
     <Compile Include="Localization\ILocalizationService.cs" />
     <Compile Include="Localization\LocalizationService.cs" />
     <Compile Include="Messages\ManualTimeRegistered.cs" />
+    <Compile Include="Messages\OpenTimeTrackingDetailsViewMessage.cs" />
     <Compile Include="Properties\Resources.de.Designer.cs">
       <DependentUpon>Resources.de.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -159,6 +160,8 @@
     <Compile Include="ViewModels\ClosableViewModel.cs" />
     <Compile Include="ViewModels\CloseEventArgs.cs" />
     <Compile Include="ViewModels\ManualTime\EnterManualTimeViewModel.cs" />
+    <Compile Include="ViewModels\TimeTrackingDetails\ITimeTrackingDetailsViewModel.cs" />
+    <Compile Include="ViewModels\TimeTrackingDetails\TimeTrackingDetailsViewModel.cs" />
     <Compile Include="Views\ChangeTask\ChangeTaskView.xaml.cs">
       <DependentUpon>ChangeTaskView.xaml</DependentUpon>
     </Compile>
@@ -169,6 +172,10 @@
       <DependentUpon>EnterManualTimeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ManualTime\IEnterManualTimeView.cs" />
+    <Compile Include="Views\TimeTrackingDetails\ITimeTrackingDetailsView.cs" />
+    <Compile Include="Views\TimeTrackingDetails\TimeTrackingDetailsView.xaml.cs">
+      <DependentUpon>TimeTrackingDetailsView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Common\Common.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -195,6 +202,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ManualTime\EnterManualTimeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TimeTrackingDetails\TimeTrackingDetailsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

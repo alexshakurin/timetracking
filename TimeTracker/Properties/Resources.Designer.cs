@@ -338,5 +338,23 @@ namespace TimeTracker.Properties {
                 return ResourceManager.GetString("ValidateManualTime_StartAndEndMustBeTheSameDate", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View details....
+        /// </summary>
+        public static string ViewTimeTrackingDetails {
+            get {
+                return ResourceManager.GetString("ViewTimeTrackingDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Tracking Details.
+        /// </summary>
+        public static string ViewTimeTrackingDetailsWindow_Title {
+            get {
+                return ResourceManager.GetString("ViewTimeTrackingDetailsWindow_Title", resourceCulture);
+            }
+        }
     }
 }

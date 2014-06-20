@@ -12,6 +12,7 @@ using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Win32;
 using TimeTracker.Localization;
+using TimeTracker.Messages;
 using TimeTracker.TimePublishing;
 using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.ApplicationServices.Settings;
@@ -31,6 +32,8 @@ namespace TimeTracker
 		private readonly ICommandBus commandBus;
 		private IDisposable refresh;
 
+		private ICommand openTimeTrackingDetailsCommand;
+
 		private const int maxAttemptsToLoadStatistics = 5;
 		private int currentAttempt;
 
@@ -45,6 +48,19 @@ namespace TimeTracker
 		private bool isPaused;
 
 		private ITimeTrackingViewModel timeTrackingViewModel;
+
+		public ICommand OpenTimeTrackingDetailsCommand
+		{
+			get
+			{
+				if (openTimeTrackingDetailsCommand == null)
+				{
+					openTimeTrackingDetailsCommand = new RelayCommand(ExecuteOpenTimeTrackingDetails);
+				}
+
+				return openTimeTrackingDetailsCommand;
+			}
+		}
 
 		public ICommand RefreshStatisticsCommand
 		{
@@ -392,6 +408,11 @@ namespace TimeTracker
 			TimeTracker.TimeTrackingViewModel.OnTimeRegistrationError(error,
 				localizationService,
 				messageBox);
+		}
+
+		private void ExecuteOpenTimeTrackingDetails()
+		{
+			MessengerInstance.Send(new OpenTimeTrackingDetailsViewMessage());
 		}
 	}
 }

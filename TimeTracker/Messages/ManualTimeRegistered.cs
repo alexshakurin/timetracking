@@ -1,8 +1,9 @@
-﻿using TimeTracking.Commands;
+﻿using GalaSoft.MvvmLight.Messaging;
+using TimeTracking.Commands;
 
 namespace TimeTracker.Messages
 {
-	public class ManualTimeRegistered
+	public class ManualTimeRegistered : MessageBase
 	{
 		public RegisterTimeCommand Command { get; private set; }
 

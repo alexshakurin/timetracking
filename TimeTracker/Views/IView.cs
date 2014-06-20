@@ -3,5 +3,7 @@
 	public interface IView
 	{
 		bool? ShowDialog();
+
+		void Show();
 	}
 }

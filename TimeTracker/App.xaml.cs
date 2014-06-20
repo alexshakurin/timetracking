@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using TimeTracker.Localization;
+using TimeTracker.Messages;
 using TimeTracker.RestApiExport;
 using TimeTracker.Settings;
+using TimeTracker.ViewModels.TimeTrackingDetails;
 using TimeTracker.Views.ChangeTask;
 using TimeTracker.Views.ManualTime;
+using TimeTracker.Views.TimeTrackingDetails;
 using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.ApplicationServices.Settings;
 using TimeTracking.CommandHandlers;
@@ -83,6 +88,7 @@ namespace TimeTracker
 			container.RegisterType<ILocalizationService, LocalizationService>();
 			container.RegisterType<IMessageBoxService, MessageBoxService>();
 			container.RegisterType<ITimeTrackingViewModel, TimeTrackingViewModel>();
+			container.RegisterType<ITimeTrackingDetailsViewModel, TimeTrackingDetailsViewModel>();
 			container.RegisterType<IEventBus, EventBus>();
 			container.RegisterType<ICommandBus, SynchronousCommandBus>();
 			container.RegisterType<MainViewModel>();
@@ -99,10 +105,36 @@ namespace TimeTracker
 				new ContainerControlledLifetimeManager());
 			container.RegisterType<ReadModelRepository>();
 
+			container.RegisterType<ITimeTrackingDetailsView, TimeTrackingDetailsView>();
 			container.RegisterType<IChangeTaskView, ChangeTaskView>();
 			container.RegisterType<IEnterManualTimeView, EnterManualTimeView>();
 
 			ServiceLocator.SetLocatorProvider(() => new UnityServiceLocator(container));
+
+			Messenger.Default.Register<OpenTimeTrackingDetailsViewMessage>(this,
+				OnOpenTimeTrackingDetailsMessageReceived);
+		}
+
+		private void OnOpenTimeTrackingDetailsMessageReceived(OpenTimeTrackingDetailsViewMessage msg)
+		{
+			ITimeTrackingDetailsView existingWindow = null;
+
+			foreach (Window window in Current.Windows)
+			{
+				if (window is ITimeTrackingDetailsView)
+				{
+					existingWindow = window as ITimeTrackingDetailsView;
+					break;
+				}
+			}
+
+			if (existingWindow == null)
+			{
+				existingWindow = ServiceLocator.Current.GetInstance<ITimeTrackingDetailsView>();
+				existingWindow.Show();
+			}
+
+			existingWindow.Activate();
 		}
 
 		private bool CheckSettings(ISettingsService settingsService)
