@@ -29,7 +29,10 @@ namespace TimeTracker
 		private readonly IMessageBoxService messageBox;
 		private readonly ISettingsService settingsService;
 		private readonly ICommandBus commandBus;
-		private readonly IDisposable refresh;
+		private IDisposable refresh;
+
+		private const int maxAttemptsToLoadStatistics = 5;
+		private int currentAttempt;
 
 		private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
@@ -154,9 +157,6 @@ namespace TimeTracker
 			SystemEvents.PowerModeChanged += PowerModeChanged;
 			SystemEvents.SessionSwitch += SessionSwitch;
 
-			refresh = Observable.Interval(TimeSpan.FromSeconds(5))
-				.Subscribe(l => RefreshTotals());
-
 			StartLoading();
 		}
 
@@ -184,6 +184,9 @@ namespace TimeTracker
 
 				vm.PropertyChanged += OnViewModelPropertyChanged;
 				TimeTrackingViewModel = vm;
+
+				refresh = Observable.Interval(TimeSpan.FromSeconds(5))
+					.Subscribe(l => RefreshTotals());
 
 				CommandManager.InvalidateRequerySuggested();
 			}
@@ -361,6 +364,17 @@ namespace TimeTracker
 				SetTotalTime(totalForToday.Result);
 				SetTotalForCurrentWeek(totalForWeek.Result);
 				SetTotalForCurrentMonth(totalForMonth.Result);
+
+				currentAttempt = 0;
+			}
+			catch (Exception ex)
+			{
+				if (ex.IsFatal() || currentAttempt > maxAttemptsToLoadStatistics)
+				{
+					throw;
+				}
+
+				currentAttempt++;
 			}
 			finally
 			{

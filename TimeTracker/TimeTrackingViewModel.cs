@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
@@ -12,6 +13,7 @@ using TimeTracking.ApplicationServices.Dialogs;
 using TimeTracking.ApplicationServices.Settings;
 using TimeTracking.Commands;
 using TimeTracking.Core;
+using TimeTracking.Extensions;
 using TimeTracking.Infrastructure;
 using TimeTracking.Logging;
 
@@ -116,7 +118,7 @@ namespace TimeTracker
 			this.messageBox = messageBox;
 			this.settingsService = settingsService;
 			this.localizationService = localizationService;
-			Memo = settingsService.GetLatestMemo();
+			TryGetLatestMemo();
 
 			MessengerInstance.Register<ManualTimeRegistered>(this, OnManualTimeRegistered);
 			core = new TimeTrackingCore(memo,
@@ -142,6 +144,23 @@ namespace TimeTracker
 		{
 			var date = DateTime.Now.Date;
 			return GetKey(date);
+		}
+
+		private void TryGetLatestMemo()
+		{
+			try
+			{
+				Memo = settingsService.GetLatestMemo();
+			}
+			catch (ConfigurationErrorsException ex)
+			{
+				var fileName = (ex.InnerException as ConfigurationErrorsException)
+					.Maybe(e => e.Filename);
+
+				DispatcherHelper.UIDispatcher.BeginInvoke(new Action(() =>
+					settingsService.DeleteSettingsFile(fileName)));
+				LogHelper.Error(string.Format("Error loading latest memo: {0}", ex));
+			}
 		}
 
 		private void OnTrackingStopped()

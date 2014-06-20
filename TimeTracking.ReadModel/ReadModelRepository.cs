@@ -110,5 +110,38 @@ namespace TimeTracking.ReadModel
 
 			return TimeSpan.FromSeconds(statisticsList.Sum());
 		}
+
+		public void AddInterval(string key, string date, TimeSpan start, TimeSpan end, string targetMemo)
+		{
+			var memo = targetMemo ?? string.Empty;
+
+			using (var context = contextFactory())
+			{
+				var startTime = start.ToString();
+				var endTime = end.ToString();
+
+				var existingInterval = context.Set<WorkingTimeInterval>()
+					.FirstOrDefault(wti => wti.AggregateId == key
+						&& wti.Date == date
+						&& wti.EndTime == startTime
+						&& wti.Memo == memo);
+
+				if (existingInterval == null)
+				{
+					existingInterval = new WorkingTimeInterval(key, date);
+					existingInterval.StartTime = startTime;
+					existingInterval.Memo = memo;
+					existingInterval.EndTime = endTime;
+					context.Set<WorkingTimeInterval>().Add(existingInterval);
+				}
+				else
+				{
+					existingInterval.EndTime = endTime;
+				}
+
+				context.Configuration.ValidateOnSaveEnabled = false;
+				context.SaveChanges();
+			}
+		}
 	}
 }

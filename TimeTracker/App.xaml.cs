@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Configuration;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Threading;
@@ -16,6 +18,7 @@ using TimeTracking.Commands;
 using TimeTracking.EventHandlers;
 using TimeTracking.Export;
 using TimeTracking.Extensions;
+using TimeTracking.Extensions.Exceptions;
 using TimeTracking.Infrastructure;
 using TimeTracking.Infrastructure.CommandHandlers;
 using TimeTracking.Infrastructure.Impl;
@@ -47,6 +50,21 @@ namespace TimeTracker
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
+			if (!CheckSettings(new SettingsService()))
+			{
+				try
+				{
+					var exeFile = Process.GetCurrentProcess().MainModule.FileName;
+					Process.Start(exeFile);
+					Environment.Exit(-1);
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(ex.ToString());
+					throw new UnrecoverableApplicationException(null, ex);
+				}
+			}
+
 			LogHelper.Debug("Starting application");
 
 			base.OnStartup(e);
@@ -59,6 +77,7 @@ namespace TimeTracker
 			container.RegisterType<IEventHandler<WorkingTimeRegistered>, WorkingTimeRegisteredEventHandler>("readModelHandler");
 			container.RegisterType<IEventHandler<WorkingTimeRegistered>, WorkingTimeRegisteredFileWriterHandler>("fileSystemHandler");
 			container.RegisterType<IEventHandler<WorkingTimeRegistered>, WorkingTimeRegisteredSettingsHandler>("settingsHandler");
+			container.RegisterType<IEventHandler<WorkingTimeRegistered>, WorkingTimeRegisteredIntervalHandler>("intervalHandler");
 
 			container.RegisterType<ISettingsService, SettingsService>();
 			container.RegisterType<ILocalizationService, LocalizationService>();
@@ -84,6 +103,27 @@ namespace TimeTracker
 			container.RegisterType<IEnterManualTimeView, EnterManualTimeView>();
 
 			ServiceLocator.SetLocatorProvider(() => new UnityServiceLocator(container));
+		}
+
+		private bool CheckSettings(ISettingsService settingsService)
+		{
+			var success = true;
+
+			try
+			{
+				settingsService.GetLatestMemo();
+			}
+			catch (ConfigurationErrorsException ex)
+			{
+				success = false;
+				var fileName = (ex.InnerException as ConfigurationErrorsException)
+					.Maybe(e => e.Filename);
+
+				settingsService.DeleteSettingsFile(fileName);
+				LogHelper.Error(string.Format("Error loading latest memo: {0}", ex));
+			}
+
+			return success;
 		}
 
 		private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

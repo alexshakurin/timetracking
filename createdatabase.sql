@@ -15,3 +15,13 @@ create table storedevents
 	correlationid text not null,
 	primary key (aggregateid, aggregatetype, version)
 )
+
+create table workingtimeintervals
+(
+	aggregateid text not null,
+	date text not null,
+	starttime text not null,
+	endtime text not null,
+	memo text not null
+)
+

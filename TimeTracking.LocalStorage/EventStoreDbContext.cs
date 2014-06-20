@@ -17,6 +17,10 @@ namespace TimeTracking.LocalStorage
 				.ToTable("storedevents");
 			modelBuilder.Entity<TimeTrackingStatistics>().HasKey(x => x.Date)
 				.ToTable("timetracking");
+
+			// Fake key. EF requires key but we don't have one
+			modelBuilder.Entity<WorkingTimeInterval>().HasKey(x => new { x.AggregateId, x.StartTime })
+				.ToTable("workingtimeintervals");
 		}
 	}
 }
