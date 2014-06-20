@@ -213,6 +213,9 @@
   <data name="ViewTimeTrackingDetails" xml:space="preserve">
     <value>View details...</value>
   </data>
+  <data name="ViewTimeTrackingDetailsWindow_SelectDayText" xml:space="preserve">
+    <value>Day</value>
+  </data>
   <data name="ViewTimeTrackingDetailsWindow_Title" xml:space="preserve">
     <value>Time Tracking Details</value>
   </data>

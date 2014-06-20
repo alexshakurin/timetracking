@@ -349,6 +349,15 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        public static string ViewTimeTrackingDetailsWindow_SelectDayText {
+            get {
+                return ResourceManager.GetString("ViewTimeTrackingDetailsWindow_SelectDayText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Time Tracking Details.
         /// </summary>
         public static string ViewTimeTrackingDetailsWindow_Title {

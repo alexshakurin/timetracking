@@ -139,6 +139,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Behaviors\CloseWindowFromViewModel.cs" />
+    <Compile Include="Controls\DayTimeTrackingDetails.xaml.cs">
+      <DependentUpon>DayTimeTrackingDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FileSystemExport\FileSystemTimeService.cs" />
     <Compile Include="ITimeTrackingViewModel.cs" />
     <Compile Include="Localization\ILocalizationService.cs" />
@@ -160,6 +163,7 @@
     <Compile Include="ViewModels\ClosableViewModel.cs" />
     <Compile Include="ViewModels\CloseEventArgs.cs" />
     <Compile Include="ViewModels\ManualTime\EnterManualTimeViewModel.cs" />
+    <Compile Include="ViewModels\TimeTrackingDetails\DayTimeTrackingDetailsViewModel.cs" />
     <Compile Include="ViewModels\TimeTrackingDetails\ITimeTrackingDetailsViewModel.cs" />
     <Compile Include="ViewModels\TimeTrackingDetails\TimeTrackingDetailsViewModel.cs" />
     <Compile Include="Views\ChangeTask\ChangeTaskView.xaml.cs">
@@ -177,6 +181,10 @@
       <DependentUpon>TimeTrackingDetailsView.xaml</DependentUpon>
     </Compile>
     <Page Include="Common\Common.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DayTimeTrackingDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
