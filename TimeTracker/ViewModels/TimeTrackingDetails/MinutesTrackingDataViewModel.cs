@@ -12,17 +12,18 @@ namespace TimeTracker.ViewModels.TimeTrackingDetails
 
 		public string Range { get; private set; }
 
-		public MinutesTrackingDataViewModel(int hour, int minute, int second)
+		public MinutesTrackingDataViewModel(int minuteStart,
+			int minutesLength,
+			TimeSpan rangeStart,
+			TimeSpan rangeEnd,
+			string memo)
 		{
-			Minute = minute;
-			MinutesLength = 25;
-
-			var rangeStart = new TimeSpan(hour, minute, second);
-			var rangeEnd = rangeStart.Add(TimeSpan.FromMinutes(MinutesLength));
+			Minute = minuteStart;
+			MinutesLength = minutesLength;
 
 			Range = string.Format("{0} - {1}", rangeStart, rangeEnd);
 
-			Memo = "Test memo";
+			Memo = "Memo";
 		}
 	}
 }

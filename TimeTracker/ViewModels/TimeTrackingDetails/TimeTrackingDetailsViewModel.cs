@@ -1,4 +1,7 @@
 ﻿using System;
+using Microsoft.Practices.ServiceLocation;
+using TimeTracking.Extensions;
+using TimeTracking.ReadModel;
 
 namespace TimeTracker.ViewModels.TimeTrackingDetails
 {
@@ -45,9 +48,16 @@ namespace TimeTracker.ViewModels.TimeTrackingDetails
 
 		private void LoadDataForSelectedDate()
 		{
-			// TODO: Load time tracking details for a day
+			if (SelectedDate.HasValue)
+			{
+				var repository = ServiceLocator.Current.GetInstance<ReadModelRepository>();
+				var key = TimeTrackingViewModel.GetKey(SelectedDate.Value);
+				var intervals = repository.GetIntervalsForDay(key.Key, key.GetDateString());
+				var dayStatistics = repository.GetStatisticsForDay(key.GetDateString());
 
-			SelectedDateData = new DayTimeTrackingDetailsViewModel();
+				SelectedDateData = new DayTimeTrackingDetailsViewModel(intervals,
+					dayStatistics.Maybe(ds => TimeSpan.FromSeconds(ds.Seconds)));
+			}
 		}
 	}
 }

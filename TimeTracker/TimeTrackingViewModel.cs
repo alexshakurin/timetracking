@@ -26,7 +26,6 @@ namespace TimeTracker
 		private readonly ISettingsService settingsService;
 		private readonly ILocalizationService localizationService;
 		private readonly ITimeTrackingCore core;
-		private const string format = "yyyy-MM-dd";
 
 		private ICommand enterManualTimeCommand;
 
@@ -130,14 +129,12 @@ namespace TimeTracker
 
 		public static TimeTrackingKey ToTimeTrackingKey(DateTime dateTime)
 		{
-			var date = dateTime.ToString(format);
-
-			return new TimeTrackingKey(date, dateTime);
+			return TimeTrackingKey.FromDate(dateTime);
 		}
 
 		public static TimeTrackingKey GetKey(DateTime date)
 		{
-			return new TimeTrackingKey(date.ToString(format), date);
+			return TimeTrackingKey.FromDate(date);
 		}
 
 		public static TimeTrackingKey GetCurrentKey()

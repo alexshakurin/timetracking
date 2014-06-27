@@ -111,6 +111,20 @@ namespace TimeTracking.ReadModel
 			return TimeSpan.FromSeconds(statisticsList.Sum());
 		}
 
+		public IReadOnlyCollection<WorkingTimeInterval> GetIntervalsForDay(string key, string day)
+		{
+			var intervals = new List<WorkingTimeInterval>();
+
+			using (var context = contextFactory())
+			{
+				intervals.AddRange(context.Set<WorkingTimeInterval>()
+					.Where(wti => wti.AggregateId == key && wti.Date == day)
+					.ToList());
+			}
+
+			return intervals.ToList().AsReadOnly();
+		}
+
 		public void AddInterval(string key, string date, TimeSpan start, TimeSpan end, string targetMemo)
 		{
 			var memo = targetMemo ?? string.Empty;
