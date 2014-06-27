@@ -5,7 +5,78 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
-    </Grid>
+    <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                  >
+        <Grid Margin="5" IsSharedSizeScope="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Grid.Column="1" Background="{x:Static SystemColors.ActiveBorderBrush}" x:Name="minutesColumnGrid">
+
+            </Grid>
+            <ItemsControl Grid.Row="1" BorderThickness="0" BorderBrush="Transparent"
+                          Background="{x:Static SystemColors.ActiveBorderBrush}"
+                      ItemsSource="{Binding HoursData}"
+                      >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="WhiteSmoke" Height="35" BorderThickness="0 0 1 1" Margin="0"
+                                >
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Text="{Binding Hour}" />
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Grid Grid.Row="1" Grid.Column="1" Background="{x:Static SystemColors.ActiveBorderBrush}">
+                <ItemsControl ItemsSource="{Binding HoursData}"
+                              BorderThickness="0" BorderBrush="Transparent"
+                          >
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Height="35" Margin="0" BorderThickness="0 0 1 1"
+                                    BorderBrush="WhiteSmoke">
+                                <ItemsControl Margin="3" ItemsSource="{Binding MinutesData}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Grid Loaded="FrameworkElement_OnLoaded"
+                                                  />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="Grid.Column" Value="{Binding Minute}" />
+                                            <Setter Property="Grid.ColumnSpan" Value="{Binding MinutesLength}" />
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="2"
+                                                    ToolTip="{Binding Range}"
+                                                    Background="#CC119EDA">
+                                                <TextBlock Text="{Binding Memo}"
+                                                           HorizontalAlignment="Left"
+                                                           VerticalAlignment="Center"
+                                                           Margin="5 0 0 0"
+                                               TextWrapping="Wrap"
+                                               TextTrimming="CharacterEllipsis" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                            
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+
 </UserControl>

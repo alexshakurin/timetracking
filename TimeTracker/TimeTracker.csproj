@@ -164,7 +164,9 @@
     <Compile Include="ViewModels\CloseEventArgs.cs" />
     <Compile Include="ViewModels\ManualTime\EnterManualTimeViewModel.cs" />
     <Compile Include="ViewModels\TimeTrackingDetails\DayTimeTrackingDetailsViewModel.cs" />
+    <Compile Include="ViewModels\TimeTrackingDetails\HoursTrackingDataViewModel.cs" />
     <Compile Include="ViewModels\TimeTrackingDetails\ITimeTrackingDetailsViewModel.cs" />
+    <Compile Include="ViewModels\TimeTrackingDetails\MinutesTrackingDataViewModel.cs" />
     <Compile Include="ViewModels\TimeTrackingDetails\TimeTrackingDetailsViewModel.cs" />
     <Compile Include="Views\ChangeTask\ChangeTaskView.xaml.cs">
       <DependentUpon>ChangeTaskView.xaml</DependentUpon>

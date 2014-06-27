@@ -46,6 +46,8 @@ namespace TimeTracker.ViewModels.TimeTrackingDetails
 		private void LoadDataForSelectedDate()
 		{
 			// TODO: Load time tracking details for a day
+
+			SelectedDateData = new DayTimeTrackingDetailsViewModel();
 		}
 	}
 }

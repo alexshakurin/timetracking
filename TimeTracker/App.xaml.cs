@@ -160,6 +160,8 @@ namespace TimeTracker
 
 		private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
+			LogHelper.Error(e.Exception.ToString());
+
 			var localizationService = LocalizationService.Default;
 
 			var isRecoverable = !e.Exception.IsFatal();
