@@ -23,7 +23,7 @@ namespace TimeTracker.ViewModels.TimeTrackingDetails
 
 			Range = string.Format("{0} - {1}", rangeStart, rangeEnd);
 
-			Memo = "Memo";
+			Memo = memo;
 		}
 	}
 }
