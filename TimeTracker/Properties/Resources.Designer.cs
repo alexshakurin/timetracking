@@ -151,6 +151,15 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manage intervals....
+        /// </summary>
+        public static string ManageIntervalsHeader {
+            get {
+                return ResourceManager.GetString("ManageIntervalsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to End:.
         /// </summary>
         public static string ManualTime_EndDate {

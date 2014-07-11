@@ -147,6 +147,9 @@
   <data name="EnterManualTime_Title" xml:space="preserve">
     <value>Enter manual time</value>
   </data>
+  <data name="ManageIntervalsHeader" xml:space="preserve">
+    <value>Manage intervals...</value>
+  </data>
   <data name="ManualTimeAdded_Caption" xml:space="preserve">
     <value>Time added</value>
   </data>

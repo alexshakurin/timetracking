@@ -1,18 +1,39 @@
 ﻿using System;
+using System.Windows;
+using System.Windows.Input;
+using GalaSoft.MvvmLight.Command;
 
 namespace TimeTracker.ViewModels.TimeTrackingDetails
 {
 	public class MinutesTrackingDataViewModel : ViewModel
 	{
+		private ICommand manageIntervals;
+
 		public int Minute { get; private set; }
 
 		public int MinutesLength { get; private set; }
 
 		public string Memo { get; private set; }
 
-		//public string Range { get; private set; }
-
 		public string Description { get; private set; }
+
+		public ICommand ManageIntervals
+		{
+			get
+			{
+				if (manageIntervals == null)
+				{
+					manageIntervals = new RelayCommand(ExecuteManageIntervals);
+				}
+
+				return manageIntervals;
+			}
+		}
+
+		private void ExecuteManageIntervals()
+		{
+			//MessageBox.Show("Done");
+		}
 
 		public MinutesTrackingDataViewModel(int minuteStart,
 			int minutesLength,
