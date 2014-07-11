@@ -68,8 +68,8 @@ namespace TimeTracker.ViewModels.TimeTrackingDetails
 					{
 						viewModels.Add(new MinutesTrackingDataViewModel(intersection.Start.Minutes,
 							totalMinutes,
-							intersection.Start,
-							intersection.End,
+							interval.Start,
+							interval.End,
 							interval.Memo));
 					}
 				}

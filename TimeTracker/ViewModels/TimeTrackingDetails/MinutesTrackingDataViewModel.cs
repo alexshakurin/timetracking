@@ -10,7 +10,9 @@ namespace TimeTracker.ViewModels.TimeTrackingDetails
 
 		public string Memo { get; private set; }
 
-		public string Range { get; private set; }
+		//public string Range { get; private set; }
+
+		public string Description { get; private set; }
 
 		public MinutesTrackingDataViewModel(int minuteStart,
 			int minutesLength,
@@ -21,7 +23,8 @@ namespace TimeTracker.ViewModels.TimeTrackingDetails
 			Minute = minuteStart;
 			MinutesLength = minutesLength;
 
-			Range = string.Format("{0} - {1}", rangeStart, rangeEnd);
+			var range = string.Format("{0} - {1}", rangeStart, rangeEnd);
+			Description = string.Format("{0} ({1})", range, memo);
 
 			Memo = memo;
 		}
