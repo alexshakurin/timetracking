@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1BD06DF3-22A6-4F01-83EB-D468AC039C76}</ProjectGuid>
+    <ProjectGuid>{72399EB3-42C7-4A03-95EF-B6C78BD67C27}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TimeTracking.Model</RootNamespace>
-    <AssemblyName>TimeTracking.Model</AssemblyName>
+    <RootNamespace>TimeTracking.Model.Tests.Unit</RootNamespace>
+    <AssemblyName>TimeTracking.Model.Tests.Unit</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,9 +30,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,19 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DateTimeExtensionMethods.cs" />
-    <Compile Include="Events\WorkingTimeRegistered.cs" />
-    <Compile Include="Exceptions\IntervalDuplicateException.cs" />
-    <Compile Include="IDomainEvent.cs" />
-    <Compile Include="IEventSourced.cs" />
-    <Compile Include="IVersionedEvent.cs" />
-    <Compile Include="EventSourced.cs" />
+    <Compile Include="TimeIntervalTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TimeInterval.cs" />
-    <Compile Include="VersionedEvent.cs" />
-    <Compile Include="WorkingTime.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TimeTracking.Model\TimeTracking.Model.csproj">
+      <Project>{1bd06df3-22a6-4f01-83eb-d468ac039c76}</Project>
+      <Name>TimeTracking.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

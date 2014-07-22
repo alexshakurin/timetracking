@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.Core.Tests.Uni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.ReadModel", "TimeTracking.ReadModel\TimeTracking.ReadModel.csproj", "{4653B13D-81D0-4142-AAE9-C534FED70F30}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracking.Model.Tests.Unit", "TimeTracking.Model.Tests.Unit\TimeTracking.Model.Tests.Unit.csproj", "{72399EB3-42C7-4A03-95EF-B6C78BD67C27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,11 +105,16 @@ Global
 		{4653B13D-81D0-4142-AAE9-C534FED70F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4653B13D-81D0-4142-AAE9-C534FED70F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4653B13D-81D0-4142-AAE9-C534FED70F30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72399EB3-42C7-4A03-95EF-B6C78BD67C27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72399EB3-42C7-4A03-95EF-B6C78BD67C27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72399EB3-42C7-4A03-95EF-B6C78BD67C27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72399EB3-42C7-4A03-95EF-B6C78BD67C27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B7FF62EE-EFD2-4B7D-BB7C-2F40154EFDF0} = {041B6A46-1F0D-497F-9710-36183785E093}
+		{72399EB3-42C7-4A03-95EF-B6C78BD67C27} = {041B6A46-1F0D-497F-9710-36183785E093}
 	EndGlobalSection
 EndGlobal
