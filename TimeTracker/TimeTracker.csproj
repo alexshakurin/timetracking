@@ -162,6 +162,7 @@
     <Compile Include="ViewModels\ChangeTask\ChangeTaskViewModel.cs" />
     <Compile Include="ViewModels\ClosableViewModel.cs" />
     <Compile Include="ViewModels\CloseEventArgs.cs" />
+    <Compile Include="ViewModels\IntervalsManagement\ManageIntervalsViewModel.cs" />
     <Compile Include="ViewModels\ManualTime\EnterManualTimeViewModel.cs" />
     <Compile Include="ViewModels\TimeTrackingDetails\DayTimeTrackingDetailsViewModel.cs" />
     <Compile Include="ViewModels\TimeTrackingDetails\HoursTrackingDataViewModel.cs" />
@@ -172,6 +173,10 @@
       <DependentUpon>ChangeTaskView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ChangeTask\IChangeTaskView.cs" />
+    <Compile Include="Views\IntervalsManagement\IManageIntervalsView.cs" />
+    <Compile Include="Views\IntervalsManagement\ManageIntervalsView.xaml.cs">
+      <DependentUpon>ManageIntervalsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\IView.cs" />
     <Compile Include="Views\IViewWithViewModel.cs" />
     <Compile Include="Views\ManualTime\EnterManualTimeView.xaml.cs">
@@ -208,6 +213,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ChangeTask\ChangeTaskView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\IntervalsManagement\ManageIntervalsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -314,9 +323,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\IntervalsManagement\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

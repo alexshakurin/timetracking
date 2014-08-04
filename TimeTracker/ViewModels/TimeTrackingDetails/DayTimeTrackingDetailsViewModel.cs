@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using TimeTracker.Localization;
 using TimeTracking.LocalStorage;
 
 namespace TimeTracker.ViewModels.TimeTrackingDetails
@@ -66,7 +67,9 @@ namespace TimeTracker.ViewModels.TimeTrackingDetails
 					var totalMinutes = intersection.TotalMinutes;
 					if (totalMinutes > 0)
 					{
-						viewModels.Add(new MinutesTrackingDataViewModel(intersection.Start.Minutes,
+						viewModels.Add(new MinutesTrackingDataViewModel(LocalizationService.Default,
+							hourIntervalStart.Hours,
+							intersection.Start.Minutes,
 							totalMinutes,
 							interval.Start,
 							interval.End,

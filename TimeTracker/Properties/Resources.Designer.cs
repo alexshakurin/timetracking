@@ -61,6 +61,15 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You are about to delete the following interval:.
+        /// </summary>
+        public static string AboutToDeleteIntervalMessage {
+            get {
+                return ResourceManager.GetString("AboutToDeleteIntervalMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add.
         /// </summary>
         public static string AddManulTimeButton {
@@ -124,11 +133,38 @@ namespace TimeTracker.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Config delete interval.
+        /// </summary>
+        public static string ConfirmDeleteInterval {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current task.
         /// </summary>
         public static string CurrentTaskHeader {
             get {
                 return ResourceManager.GetString("CurrentTaskHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete this hour.
+        /// </summary>
+        public static string DeleteThisHour {
+            get {
+                return ResourceManager.GetString("DeleteThisHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete interval.
+        /// </summary>
+        public static string DeleteWholeInterval {
+            get {
+                return ResourceManager.GetString("DeleteWholeInterval", resourceCulture);
             }
         }
         
@@ -156,6 +192,15 @@ namespace TimeTracker.Properties {
         public static string ManageIntervalsHeader {
             get {
                 return ResourceManager.GetString("ManageIntervalsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage intervals.
+        /// </summary>
+        public static string ManageIntervalsTitle {
+            get {
+                return ResourceManager.GetString("ManageIntervalsTitle", resourceCulture);
             }
         }
         
@@ -210,6 +255,16 @@ namespace TimeTracker.Properties {
         public static string OkButton {
             get {
                 return ResourceManager.GetString("OkButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WARNING: By confirming operation you will lose all the saved progress for the above interval.
+        ///Are you sure you want to proceed?.
+        /// </summary>
+        public static string ProceedDeleteIntervalMessage {
+            get {
+                return ResourceManager.GetString("ProceedDeleteIntervalMessage", resourceCulture);
             }
         }
         

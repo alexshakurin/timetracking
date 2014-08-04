@@ -14,6 +14,7 @@ using TimeTracker.RestApiExport;
 using TimeTracker.Settings;
 using TimeTracker.ViewModels.TimeTrackingDetails;
 using TimeTracker.Views.ChangeTask;
+using TimeTracker.Views.IntervalsManagement;
 using TimeTracker.Views.ManualTime;
 using TimeTracker.Views.TimeTrackingDetails;
 using TimeTracking.ApplicationServices.Dialogs;
@@ -105,6 +106,7 @@ namespace TimeTracker
 				new ContainerControlledLifetimeManager());
 			container.RegisterType<ReadModelRepository>();
 
+			container.RegisterType<IManageIntervalsView, ManageIntervalsView>();
 			container.RegisterType<ITimeTrackingDetailsView, TimeTrackingDetailsView>();
 			container.RegisterType<IChangeTaskView, ChangeTaskView>();
 			container.RegisterType<IEnterManualTimeView, EnterManualTimeView>();
