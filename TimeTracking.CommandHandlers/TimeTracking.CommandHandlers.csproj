@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeleteTimeCommandHandler.cs" />
+    <Compile Include="Exceptions\DeleteTimeException.cs" />
     <Compile Include="Exceptions\RegisterTimeException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterTimeCommandHandler.cs" />

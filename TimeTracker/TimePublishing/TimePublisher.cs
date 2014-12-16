@@ -63,7 +63,7 @@ namespace TimeTracker.TimePublishing
 
 				try
 				{
-					// Allow only one RegisterTimeCommand to be processed at a time
+					// Allow only one Delete/Register TimeCommand to be processed at a time
 					await semaphoreSlim.WaitAsync();
 					await commandBus.Publish(command);
 				}
@@ -79,6 +79,36 @@ namespace TimeTracker.TimePublishing
 				if (error != null)
 				{
 					onTimeRegistrationError(error);
+				}
+			});
+		}
+
+		public static void PublishTimeDelete(ICommandBus commandBus,
+			DeleteTimeCommand command,
+			Action<Exception> onTimeDeleteError)
+		{
+			Task.Run(async () =>
+			{
+				Exception error = null;
+
+				try
+				{
+					// Allow only one Delete/Register TimeCommand to be processed at a time
+					await semaphoreSlim.WaitAsync();
+					await commandBus.Publish(command);
+				}
+				catch (Exception ex)
+				{
+					error = ex;
+				}
+				finally
+				{
+					semaphoreSlim.Release();
+				}
+
+				if (error != null)
+				{
+					onTimeDeleteError(error);
 				}
 			});
 		}

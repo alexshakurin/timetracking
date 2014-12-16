@@ -42,6 +42,9 @@
   <ItemGroup>
     <Compile Include="IEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WorkingTimeDeletedEventHandler.cs" />
+    <Compile Include="WorkingTimeDeletedFileWriterHandler.cs" />
+    <Compile Include="WorkingTimeDeletedIntervalHandler.cs" />
     <Compile Include="WorkingTimeRegisteredEventHandler.cs" />
     <Compile Include="WorkingTimeRegisteredFileWriterHandler.cs" />
     <Compile Include="WorkingTimeRegisteredIntervalHandler.cs" />

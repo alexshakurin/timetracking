@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateTimeExtensionMethods.cs" />
+    <Compile Include="Events\WorkingTimeDeleted.cs" />
     <Compile Include="Events\WorkingTimeRegistered.cs" />
     <Compile Include="Exceptions\IntervalDuplicateException.cs" />
+    <Compile Include="Exceptions\IntervalNotBelongToDayException.cs" />
     <Compile Include="IDomainEvent.cs" />
     <Compile Include="IEventSourced.cs" />
     <Compile Include="IVersionedEvent.cs" />

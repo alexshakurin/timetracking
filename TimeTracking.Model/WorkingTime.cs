@@ -17,6 +17,7 @@ namespace TimeTracking.Model
 		{
 			intervals = new List<TimeInterval>();
 			Handles<WorkingTimeRegistered>(OnWorkingTimeRegistered);
+			Handles<WorkingTimeDeleted>(OnWorkingTimeDeleted);
 		}
 
 		public WorkingTime(string id, IEnumerable<IVersionedEvent> history)
@@ -34,6 +35,32 @@ namespace TimeTracking.Model
 			}
 
 			Update(new WorkingTimeRegistered(date, start, end, memo));
+		}
+
+		public void DeleteTime(DateTime date, DateTimeOffset start, DateTimeOffset end)
+		{
+			var time = end - start;
+			if (Total.TotalSeconds == 0 && time.TotalSeconds < 0)
+			{
+				throw new ArgumentException("Can't remove time because working time is zero");
+			}
+
+			Update(new WorkingTimeDeleted(date, start, end));
+		}
+
+		private void OnWorkingTimeDeleted(WorkingTimeDeleted @event)
+		{
+			var targetInterval = new TimeInterval(@event.Start, @event.End);
+
+			var intersections = intervals.Where(t => t.Intersects(targetInterval)).ToList();
+			if (intersections.Count == 0)
+			{
+				throw new IntervalNotBelongToDayException(string.Format("{0} is not recorded for day {1}", @event.ToString(), @event.Date.ToShortDateString()));
+			}
+
+			var time = @event.End - @event.Start;
+			Total -= time;
+			intersections.ForEach(i => intervals.Remove(i));
 		}
 
 		private void OnWorkingTimeRegistered(WorkingTimeRegistered @event)

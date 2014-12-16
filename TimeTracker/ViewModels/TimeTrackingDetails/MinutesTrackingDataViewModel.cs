@@ -129,7 +129,5 @@ namespace TimeTracker.ViewModels.TimeTrackingDetails
 			var view = ServiceLocator.Current.GetInstance<IManageIntervalsView>();
 			view.ShowDialog();
 		}
-
-		
 	}
 }

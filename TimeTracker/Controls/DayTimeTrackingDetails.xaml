@@ -72,8 +72,8 @@
                                                                   Header="{x:Static properties:Resources.DeleteWholeInterval}" />
                                                         <MenuItem Command="{Binding DeleteThisHour}"
                                                                   Header="{x:Static properties:Resources.DeleteThisHour}" />
-                                                        <MenuItem Command="{Binding ManageIntervals}"
-                                                                  Header="{x:Static properties:Resources.ManageIntervalsHeader}" />
+                                                        <!--<MenuItem Command="{Binding ManageIntervals}"
+                                                                  Header="{x:Static properties:Resources.ManageIntervalsHeader}" />-->
                                                         
                                                     </ContextMenu>
                                                 </Border.ContextMenu>

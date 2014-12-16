@@ -15,7 +15,7 @@ namespace TimeTracking.EventHandlers
 
 		public void Handle(WorkingTimeRegistered @event)
 		{
-			repository.UpdateDayStatistics(@event.SourceId,
+			repository.AddDayStatistics(@event.SourceId,
 				@event.End - @event.Start,
 				@event.Memo);
 		}

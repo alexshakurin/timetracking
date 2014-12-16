@@ -23,6 +23,11 @@
 			Seconds += seconds;
 		}
 
+		public void RemoveSeconds(double seconds)
+		{
+			Seconds -= seconds;
+		}
+
 		public void SetSeconds(double totalSeconds)
 		{
 			Seconds = totalSeconds;

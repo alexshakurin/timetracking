@@ -61,7 +61,26 @@ namespace TimeTracking.ReadModel
 			}
 		}
 
-		public void UpdateDayStatistics(string day, TimeSpan duration, string memo)
+		public void RemoveDayStatistics(string day, TimeSpan duration)
+		{
+			lock (syncRoot)
+			{
+				using (var context = contextFactory())
+				{
+					var existingStatistics = context.Set<TimeTrackingStatistics>()
+						.FirstOrDefault(t => t.Date == day);
+
+					if (existingStatistics != null)
+					{
+						existingStatistics.RemoveSeconds(duration.TotalSeconds);
+
+						context.SaveChanges();
+					}
+				}
+			}
+		}
+
+		public void AddDayStatistics(string day, TimeSpan duration, string memo)
 		{
 			lock (syncRoot)
 			{
